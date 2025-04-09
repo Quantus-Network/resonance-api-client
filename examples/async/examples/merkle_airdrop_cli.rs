@@ -27,12 +27,15 @@ use substrate_api_client::{
     ac_primitives::ResonanceRuntimeConfig,
     SubmitAndWatch,
     ac_compose_macros::compose_extrinsic,
+    ac_primitives::HashTrait,
 };
-use dilithium_crypto::pair::{crystal_alice};
+use dilithium_crypto::pair::{dilithium_bob};
 use sp_core::H256;
-use std::{fs, fmt};
+use sp_core::{ crypto::{Ss58Codec}, sr25519 };
+use std::fmt;
 use log::info;
-use blake2::{Blake2b512, Digest};
+use codec::Encode;
+use poseidon_resonance::PoseidonHasher;
 
 #[derive(Debug)]
 enum CliError {
@@ -138,112 +141,125 @@ enum Command {
     },
 }
 
-#[derive(serde::Deserialize, Debug)]
-struct ClaimInput {
+#[derive(Debug, serde::Deserialize, serde::Serialize)]
+struct Claim {
     address: String,
     amount: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    encoded_account: Option<Vec<u8>>,
 }
 
-#[derive(serde::Serialize, Debug)]
-struct MerkleOutput {
-    root: String,
-    claims: Vec<ClaimData>,
+type BalanceOf = u128;
+
+fn calculate_leaf_hash_poseidon(
+    account: &sr25519::Public,
+    amount: BalanceOf,
+) -> [u8; 32] {
+    let account_bytes = account.encode();
+    let amount_bytes = amount.encode();
+    let combined = [account_bytes.as_slice(), amount_bytes.as_slice()].concat();
+    let mut output = [0u8; 32];
+    output.copy_from_slice(&PoseidonHasher::hash(&combined)[..]);
+    output
 }
 
-#[derive(serde::Serialize, Debug)]
-struct ClaimData {
-    address: String,
-    amount: String,
-    proof: Vec<String>,
+fn calculate_parent_hash(left: &[u8; 32], right: &[u8; 32]) -> [u8; 32] {
+    let combined = if left < right {
+        [&left[..], &right[..]].concat()
+    } else {
+        [&right[..], &left[..]].concat()
+    };
+
+    let mut output = [0u8; 32];
+    output.copy_from_slice(&PoseidonHasher::hash(&combined)[..]);
+    output
 }
 
-/// Simple hash function for leaf nodes
-fn hash_leaf(address: &str, amount: &str) -> H256 {
-    let mut hasher = Blake2b512::new();
-    hasher.update(address.as_bytes());
-    hasher.update(amount.as_bytes());
-    let result = hasher.finalize();
+fn build_merkle_tree(claims: &[Claim]) -> (Vec<Vec<[u8; 32]>>, [u8; 32]) {
+    let mut layers = Vec::new();
     
-    // Take first 32 bytes for H256
-    let mut bytes = [0u8; 32];
-    bytes.copy_from_slice(&result[0..32]);
-    H256::from(bytes)
-}
-
-/// Hash internal nodes by concatenating and hashing them
-fn hash_nodes(left: &H256, right: &H256) -> H256 {
-    let mut hasher = Blake2b512::new();
-    hasher.update(left.as_bytes());
-    hasher.update(right.as_bytes());
-    let result = hasher.finalize();
-    
-    // Take first 32 bytes for H256
-    let mut bytes = [0u8; 32];
-    bytes.copy_from_slice(&result[0..32]);
-    H256::from(bytes)
-}
-
-/// Build a Merkle tree and generate proofs
-fn build_merkle_tree(claims: &[ClaimInput]) -> MerkleOutput {
-    // Create leaf nodes
-    let leaves: Vec<(H256, usize)> = claims
+    // Create leaf layer
+    let mut current_layer: Vec<[u8; 32]> = claims
         .iter()
-        .enumerate()
-        .map(|(i, claim)| (hash_leaf(&claim.address, &claim.amount), i))
+        .map(|claim| {
+            let account_id = sr25519::Public::from_ss58check(&claim.address)
+                .expect("Invalid SS58 address");
+            
+            // Parse amount string to u128
+            let amount = claim.amount.parse::<u128>()
+                .expect("Invalid amount format");
+            calculate_leaf_hash_poseidon(&account_id, amount)
+        })
         .collect();
-    
-    // Save all intermediate nodes for proof generation
-    let mut tree_nodes: Vec<Vec<H256>> = vec![leaves.iter().map(|(hash, _)| *hash).collect()];
-    
-    // Build the tree bottom-up
-    while tree_nodes.last().unwrap().len() > 1 {
-        let level = tree_nodes.last().unwrap();
-        let mut next_level = Vec::new();
-        
-        for i in (0..level.len()).step_by(2) {
-            if i + 1 < level.len() {
-                // Hash pair of nodes
-                let hash = hash_nodes(&level[i], &level[i + 1]);
-                next_level.push(hash);
+    layers.push(current_layer.clone());
+
+    // Build tree layers
+    while current_layer.len() > 1 {
+        let mut next_layer = Vec::new();
+        for chunk in current_layer.chunks(2) {
+            if chunk.len() == 2 {
+                next_layer.push(calculate_parent_hash(&chunk[0], &chunk[1]));
             } else {
-                // Odd node, promote to next level
-                next_level.push(level[i]);
+                next_layer.push(chunk[0]);
             }
         }
-        
-        tree_nodes.push(next_level);
+        layers.push(next_layer.clone());
+        current_layer = next_layer;
     }
-    
-    // Root is the last node in the last level
-    let root = tree_nodes.last().unwrap()[0];
-    
-    // Generate proofs for each leaf
-    let mut output_claims = Vec::new();
-    for (i, claim) in claims.iter().enumerate() {
-        let mut proof = Vec::new();
-        let mut index = leaves[i].1;
+
+    (layers, current_layer[0])
+}
+
+impl Args {
+    fn generate_merkle_tree(&self, input_file: &str) -> Result<(), CliError> {
+        let file = std::fs::File::open(input_file)?;
+        let mut claims: Vec<Claim> = serde_json::from_reader(file)?;
         
-        for level in 0..tree_nodes.len() - 1 {
-            let is_right = index % 2 == 1;
-            let sibling_idx = if is_right { index - 1 } else { index + 1 };
-            
-            if sibling_idx < tree_nodes[level].len() {
-                proof.push(format!("0x{}", hex::encode(tree_nodes[level][sibling_idx].as_bytes())));
-            }
-            
-            index /= 2;
+        // Pre-process claims to store encoded account bytes
+        for claim in &mut claims {
+            let account_id = sr25519::Public::from_ss58check(&claim.address)
+                .map_err(|e| CliError::Custom(format!("Invalid SS58 address: {}", e)))?;
+            claim.encoded_account = Some(account_id.encode());
         }
         
-        output_claims.push(ClaimData {
-            address: claim.address.clone(),
-            amount: claim.amount.clone(),
-            proof,
+        let (layers, root) = build_merkle_tree(&claims);
+        
+        // Generate proofs for each claim
+        let mut proofs = Vec::new();
+        for (i, claim) in claims.iter().enumerate() {
+            let mut proof = Vec::new();
+            let mut current_idx = i;
+            
+            for (layer_idx, _layer) in layers.iter().enumerate().skip(1) {
+                let sibling_idx = if current_idx % 2 == 0 {
+                    current_idx + 1
+                } else {
+                    current_idx - 1
+                };
+                
+                if sibling_idx < layers[layer_idx - 1].len() {
+                    proof.push(layers[layer_idx - 1][sibling_idx]);
+                }
+                
+                current_idx /= 2;
+            }
+            
+            proofs.push(serde_json::json!({
+                "address": claim.address,
+                "amount": claim.amount,
+                "proof": proof.iter().map(|p| {
+                    serde_json::json!({ "hash": format!("0x{}", hex::encode(p)), })
+                }).collect::<Vec<_>>()
+            }));
+        }
+        
+        let output = serde_json::json!({
+            "root": format!("0x{}", hex::encode(root)),
+            "claims": proofs
         });
-    }
-    
-    MerkleOutput {
-        root: format!("0x{}", hex::encode(root.as_bytes())),
-        claims: output_claims,
+        
+        println!("{}", serde_json::to_string_pretty(&output)?);
+        Ok(())
     }
 }
 
@@ -252,30 +268,10 @@ async fn main() -> Result<(), CliError> {
     env_logger::init();
     let args = Args::parse();
     
-    match args.command {
-        Command::GenerateMerkleTree { input_file, output_file } => {
+    match &args.command {
+        Command::GenerateMerkleTree { input_file, output_file: _ } => {
             info!("Generating Merkle tree from {}", input_file);
-            
-            // Read and parse input file
-            let input_data = fs::read_to_string(input_file)?;
-            let claims: Vec<ClaimInput> = serde_json::from_str(&input_data)?;
-            
-            info!("Processing {} claims", claims.len());
-            let merkle_output = build_merkle_tree(&claims);
-            
-            // Output the Merkle tree data
-            let output_json = serde_json::to_string_pretty(&merkle_output)?;
-            
-            match output_file {
-                Some(file) => {
-                    fs::write(&file, output_json)?;
-                    info!("Merkle tree data written to {}", file);
-                }
-                None => {
-                    println!("{}", output_json);
-                }
-            }
-            
+            args.generate_merkle_tree(input_file)?;
             Ok(())
         },
         
@@ -299,14 +295,11 @@ async fn main() -> Result<(), CliError> {
             
             info!("Creating airdrop with merkle root: {}", hex::encode(root.as_bytes()));
             
-            // Set the signer
-            let signer = crystal_alice();
+            let signer = dilithium_bob();
             api.set_signer(signer.clone().into());
             info!("Using signer: {:?}", signer.public());
             
-            // Store the cloned API
             let api_ref = api.clone();
-            // Create and sign the extrinsic
             let xt = compose_extrinsic!(
                 api_ref,
                 "MerkleAirdrop",
@@ -314,7 +307,6 @@ async fn main() -> Result<(), CliError> {
                 root
             ).ok_or_else(|| CliError::Custom("Failed to create extrinsic".to_string()))?;
             
-            // Submit and wait for inclusion
             info!("Submitting createAirdrop transaction...");
             let result = api.submit_and_watch_extrinsic_until(xt, XtStatus::InBlock).await?;
             info!("Transaction included in block: {:?}", result);
@@ -329,8 +321,7 @@ async fn main() -> Result<(), CliError> {
             
             info!("Funding airdrop {} with amount {}", id, amount);
             
-            // Set the signer
-            let signer = crystal_alice();
+            let signer = dilithium_bob();
             api.set_signer(signer.clone().into());
             info!("Using signer: {:?}", signer.public());
             
@@ -354,30 +345,42 @@ async fn main() -> Result<(), CliError> {
         },
         
         Command::Claim { id, amount, proofs } => {
-            info!("Connecting to node at {}", args.node_url);
+            info!("Connecting to node");
             let client = JsonrpseeClient::new(&args.node_url).await?;
             let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
             
             info!("Claiming from airdrop {} for amount {}", id, amount);
             
-            // Convert proof strings to bytes
-            let proof_bytes: Vec<H256> = proofs
-                .iter()
-                .map(|p| {
-                    let p = p.trim_start_matches("0x");
-                    let bytes = hex::decode(p).expect("Invalid hex in proof");
-                    let mut array = [0u8; 32];
-                    array.copy_from_slice(&bytes);
-                    H256::from(array)
-                })
-                .collect();
+            let signer = dilithium_bob();
+            info!("Signer public key: {:?}", signer.public());
+            
+            let account_id = signer.public();
+            info!("Using account ID: {:?}", account_id);
             
             // Set the signer
-            let signer = crystal_alice();
             api.set_signer(signer.clone().into());
             info!("Using signer: {:?}", signer.public());
             
-            // Store the cloned API
+            // Convert proof strings to [u8; 32] arrays
+            let proof_bytes: Vec<[u8; 32]> = proofs
+                .iter()
+                .map(|p| {
+                    let p = p.trim_start_matches("0x");
+                    hex::decode(p)
+                        .map_err(|e| CliError::Custom(format!("Invalid hex in proof '{}': {}", p, e)))
+                        .and_then(|bytes| {
+                            bytes.try_into().map_err(|_| {
+                                CliError::Custom(format!("Proof '{}' is not 32 bytes long", p))
+                            })
+                        })
+                })
+                .collect::<Result<_, _>>()?; // Collect results, propagating errors
+            info!("Proof bytes: {:?}", proof_bytes);
+            
+            // for debugging
+            let encoded_account = account_id.encode();
+            info!("Encoded account bytes: {:?}", hex::encode(&encoded_account));
+            
             let api_ref = api.clone();
             // Create and sign the extrinsic
             let xt = compose_extrinsic!(
@@ -388,12 +391,13 @@ async fn main() -> Result<(), CliError> {
                 amount,
                 proof_bytes
             ).ok_or_else(|| CliError::Custom("Failed to create extrinsic".to_string()))?;
+
+            info!("Created extrinsic: {:?}", xt);
             
-            // Submit and wait for inclusion
             info!("Submitting claim transaction...");
             let result = api.submit_and_watch_extrinsic_until(xt, XtStatus::InBlock).await?;
-            info!("Transaction included in block: {:?}", result);
-            
+            info!("Transaction included in block: {:?}", result.block_hash);
+
             Ok(())
         },
     }
