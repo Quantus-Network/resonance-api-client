@@ -32,6 +32,7 @@ members = [
 # resonance-runtime = { path = "../chain/runtime", default-features = false }
 # pallet-merkle-airdrop = { path = "../chain/pallets/merkle-airdrop", default-features = false }
 # poseidon-resonance = { path = "../poseidon-resonance", default-features = false, features = ["serde"] }
+# pallet-reversible-transfers = { path = "../chain/pallets/reversible-transfers", default-features = false }
 
 # See readme how to set up access to private repos 
 dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false }

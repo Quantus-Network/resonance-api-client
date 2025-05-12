@@ -21,18 +21,20 @@
 //! 4. Claim rewards from airdrops using Merkle proofs
 
 use clap::{Parser, Subcommand};
-use codec::Encode;
-use dilithium_crypto::pair::dilithium_bob;
-use log::info;
-use poseidon_resonance::PoseidonHasher;
-use sp_core::{crypto::Ss58Codec, sr25519, H256};
-use std::fmt;
 use substrate_api_client::{
-	ac_compose_macros::compose_extrinsic,
-	ac_primitives::{HashTrait, ResonanceRuntimeConfig},
-	rpc::JsonrpseeClient,
-	Api, SubmitAndWatch, XtStatus,
+    Api, XtStatus,
+    rpc::JsonrpseeClient,
+    ac_primitives::ResonanceRuntimeConfig,
+    SubmitAndWatch,
+    ac_compose_macros::compose_extrinsic,
 };
+use dilithium_crypto::pair::{dilithium_bob};
+use sp_core::H256;
+use sp_core::{ crypto::{Ss58Codec}, sr25519 };
+use std::fmt;
+use log::info;
+use codec::Encode;
+use sp_io::hashing::blake2_256;
 
 #[derive(Debug)]
 enum CliError {
@@ -101,41 +103,44 @@ struct Args {
 
 #[derive(Subcommand, Debug)]
 enum Command {
-	/// Create a merkle tree and output root and proofs
-	GenerateMerkleTree {
-		#[arg(short, long)]
-		input_file: String,
+    /// Create a merkle tree and output root and proofs
+    GenerateMerkleTree {
+        #[arg(short, long)]
+        input_file: String,
+        
+        #[arg(short, long)]
+        output_file: Option<String>,
+    },
+    
+    /// Create a new airdrop with the given merkle root
+    CreateAirdrop {
+        #[arg(short, long)]
+        merkle_root: String,
+    },
+    
+    /// Fund an existing airdrop
+    FundAirdrop {
+        #[arg(short, long)]
+        id: u32,
+        
+        #[arg(short, long)]
+        amount: u128,
+    },
+    
+    /// Claim from an airdrop
+    Claim {
+        #[arg(short, long)]
+        id: u32,
+        
+        #[arg(short, long)]
+        amount: u128,
+        
+        #[arg(short, long)]
+        proofs: Vec<String>,
 
-		#[arg(short, long)]
-		output_file: Option<String>,
-	},
-
-	/// Create a new airdrop with the given merkle root
-	CreateAirdrop {
-		#[arg(short, long)]
-		merkle_root: String,
-	},
-
-	/// Fund an existing airdrop
-	FundAirdrop {
-		#[arg(short, long)]
-		id: u32,
-
-		#[arg(short, long)]
-		amount: u128,
-	},
-
-	/// Claim from an airdrop
-	Claim {
-		#[arg(short, long)]
-		id: u32,
-
-		#[arg(short, long)]
-		amount: u128,
-
-		#[arg(short, long)]
-		proofs: Vec<String>,
-	},
+        #[arg(long)]
+        recipient: String,
+    },
 }
 
 #[derive(Debug, serde::Deserialize, serde::Serialize)]
@@ -148,36 +153,57 @@ struct Claim {
 
 type BalanceOf = u128;
 
-fn calculate_leaf_hash_poseidon(account: &sr25519::Public, amount: BalanceOf) -> [u8; 32] {
-	let account_bytes = account.encode();
-	let amount_bytes = amount.encode();
-	let combined = [account_bytes.as_slice(), amount_bytes.as_slice()].concat();
-	let mut output = [0u8; 32];
-	output.copy_from_slice(&PoseidonHasher::hash(&combined)[..]);
-	output
+fn calculate_leaf_hash_blake2(
+    account: &sr25519::Public,
+    amount: BalanceOf,
+) -> [u8; 32] {
+    let account_bytes = account.encode();
+    let amount_bytes = amount.encode();
+    let combined = [account_bytes.as_slice(), amount_bytes.as_slice()].concat();
+    blake2_256(&combined)
 }
 
-fn calculate_parent_hash(left: &[u8; 32], right: &[u8; 32]) -> [u8; 32] {
-	let combined = if left < right {
-		[&left[..], &right[..]].concat()
-	} else {
-		[&right[..], &left[..]].concat()
-	};
+fn calculate_parent_hash_blake2(left: &[u8; 32], right: &[u8; 32]) -> [u8; 32] {
+    let combined = if left < right {
+        [&left[..], &right[..]].concat()
+    } else {
+        [&right[..], &left[..]].concat()
+    };
 
-	let mut output = [0u8; 32];
-	output.copy_from_slice(&PoseidonHasher::hash(&combined)[..]);
-	output
+    blake2_256(&combined)
 }
 
 fn build_merkle_tree(claims: &[Claim]) -> (Vec<Vec<[u8; 32]>>, [u8; 32]) {
-	let mut layers = Vec::new();
+    let mut layers = Vec::new();
+    
+    // Create leaf layer
+    let mut current_layer: Vec<[u8; 32]> = claims
+        .iter()
+        .map(|claim| {
+            let account_id = sr25519::Public::from_ss58check(&claim.address)
+                .expect("Invalid SS58 address");
+            
+            // Parse amount string to u128
+            let amount = claim.amount.parse::<u128>()
+                .expect("Invalid amount format");
+            calculate_leaf_hash_blake2(&account_id, amount)
+        })
+        .collect();
+    layers.push(current_layer.clone());
 
-	// Create leaf layer
-	let mut current_layer: Vec<[u8; 32]> = claims
-		.iter()
-		.map(|claim| {
-			let account_id =
-				sr25519::Public::from_ss58check(&claim.address).expect("Invalid SS58 address");
+    // Build tree layers
+    while current_layer.len() > 1 {
+        let mut next_layer = Vec::new();
+        for chunk in current_layer.chunks(2) {
+            if chunk.len() == 2 {
+                next_layer.push(calculate_parent_hash_blake2(&chunk[0], &chunk[1]));
+            } else {
+                next_layer.push(chunk[0]);
+            }
+        }
+        layers.push(next_layer.clone());
+        current_layer = next_layer;
+    }
 
 			// Parse amount string to u128
 			let amount = claim.amount.parse::<u128>().expect("Invalid amount format");
@@ -255,8 +281,135 @@ impl Args {
 
 #[tokio::main]
 async fn main() -> Result<(), CliError> {
-	env_logger::init();
-	let args = Args::parse();
+    env_logger::init();
+    let args = Args::parse();
+    
+    match &args.command {
+        Command::GenerateMerkleTree { input_file, output_file: _ } => {
+            info!("Generating Merkle tree from {}", input_file);
+            args.generate_merkle_tree(input_file)?;
+            Ok(())
+        },
+        
+        Command::CreateAirdrop { merkle_root } => {
+            info!("Connecting to node at {}", args.node_url);
+            let client = JsonrpseeClient::new(&args.node_url).await?;
+            let mut api = Api::<ResonanceRuntimeConfig, _>::new(client);
+            
+            // Remove 0x prefix if present
+            let merkle_root = merkle_root.trim_start_matches("0x");
+            let merkle_bytes = hex::decode(merkle_root)?;
+            
+            // Ensure we have exactly 32 bytes
+            if merkle_bytes.len() != 32 {
+                return Err(CliError::Custom(format!("Merkle root must be exactly 32 bytes, got {}", merkle_bytes.len())));
+            }
+            
+            let mut root = [0u8; 32];
+            root.copy_from_slice(&merkle_bytes);
+            let root = H256::from(root);
+            
+            info!("Creating airdrop with merkle root: {}", hex::encode(root.as_bytes()));
+            
+            let signer = dilithium_bob();
+            api.set_signer(signer.clone().into());
+            info!("Using signer: {:?}", signer.public());
+            
+            let api_ref = api.clone();
+            let xt = compose_extrinsic!(
+                api_ref,
+                "MerkleAirdrop",
+                "create_airdrop",
+                root
+            ).ok_or_else(|| CliError::Custom("Failed to create extrinsic".to_string()))?;
+            
+            info!("Submitting createAirdrop transaction...");
+            let result = api.submit_and_watch_extrinsic_until(xt, XtStatus::InBlock).await?;
+            info!("Transaction included in block: {:?}", result);
+            
+            Ok(())
+        },
+        
+        Command::FundAirdrop { id, amount } => {
+            info!("Connecting to node at {}", args.node_url);
+            let client = JsonrpseeClient::new(&args.node_url).await?;
+            let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
+            
+            info!("Funding airdrop {} with amount {}", id, amount);
+            
+            let signer = dilithium_bob();
+            api.set_signer(signer.clone().into());
+            info!("Using signer: {:?}", signer.public());
+            
+            // Store the cloned API
+            let api_ref = api.clone();
+            // Create and sign the extrinsic
+            let xt = compose_extrinsic!(
+                api_ref,
+                "MerkleAirdrop",
+                "fund_airdrop",
+                id,
+                amount
+            ).ok_or_else(|| CliError::Custom("Failed to create extrinsic".to_string()))?;
+            
+            // Submit and wait for inclusion
+            info!("Submitting fundAirdrop transaction...");
+            let result = api.submit_and_watch_extrinsic_until(xt, XtStatus::InBlock).await?;
+            info!("Transaction included in block: {:?}", result);
+            
+            Ok(())
+        },
+        
+        Command::Claim { id, amount, proofs, recipient } => {
+            info!("Connecting to node");
+            let client = JsonrpseeClient::new(&args.node_url).await?;
+            let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
+            
+            info!("Claiming from airdrop {} for amount {} to recipient {}", id, amount, recipient);
+            
+            let signer = dilithium_bob();
+            info!("Signer public key: {:?}", signer.public());
+            
+            // The recipient is provided as an argument, parse it to AccountId
+            let recipient_account_id = sr25519::Public::from_ss58check(recipient)
+                .map_err(|e| CliError::Custom(format!("Invalid recipient SS58 address: {}", e)))?;
+            info!("Recipient account ID: {:?}", recipient_account_id);
+            
+            // Set the signer (who pays for the transaction, can be different from recipient)
+            api.set_signer(signer.clone().into());
+            info!("Using signer: {:?}", signer.public());
+            
+            // Convert proof strings to [u8; 32] arrays
+            let proof_bytes: Vec<[u8; 32]> = proofs
+                .iter()
+                .map(|p| {
+                    let p = p.trim_start_matches("0x");
+                    hex::decode(p)
+                        .map_err(|e| CliError::Custom(format!("Invalid hex in proof '{}': {}", p, e)))
+                        .and_then(|bytes| {
+                            bytes.try_into().map_err(|_| {
+                                CliError::Custom(format!("Proof '{}' is not 32 bytes long", p))
+                            })
+                        })
+                })
+                .collect::<Result<_, _>>()?; // Collect results, propagating errors
+            info!("Proof bytes: {:?}", proof_bytes);
+            
+            // for debugging
+            let encoded_account = recipient_account_id.encode();
+            info!("Encoded account bytes: {:?}", hex::encode(&encoded_account));
+            
+            let api_ref = api.clone();
+            // Create and sign the extrinsic
+            let xt = compose_extrinsic!(
+                api_ref,
+                "MerkleAirdrop",
+                "claim",
+                id,
+                recipient_account_id,
+                amount,
+                proof_bytes
+            ).ok_or_else(|| CliError::Custom("Failed to create extrinsic".to_string()))?;
 
 	match &args.command {
 		Command::GenerateMerkleTree { input_file, output_file: _ } => {
