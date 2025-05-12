@@ -36,9 +36,9 @@ dependencies = [
  "frame-system",
  "hex",
  "log",
- "pallet-balances 40.1.0",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain)",
  "pallet-recovery",
- "pallet-reversible-transfers 40.0.1 (git+https://github.com/Quantus-Network/chain)",
+ "pallet-reversible-transfers",
  "pallet-staking",
  "parity-scale-codec",
  "poseidon-resonance 0.4.0",
@@ -46,6 +46,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sp-core",
+ "sp-io",
  "sp-keyring",
  "sp-runtime",
  "sp-state-machine",
@@ -3380,6 +3381,7 @@ version = "40.0.1"
 source = "git+https://github.com/Quantus-Network/chain#b3f8320e39b8b322d143c35b46b9cbc14d6812fc"
 dependencies = [
  "docify",
+ "frame-benchmarking",
  "frame-support",
  "frame-system",
  "log",
@@ -3610,20 +3612,6 @@ dependencies = [
  "frame-system",
  "log",
  "pallet-balances 40.0.1",
- "parity-scale-codec",
- "scale-info",
- "sp-runtime",
-]
-
-[[package]]
-name = "pallet-reversible-transfers"
-version = "40.0.1"
-source = "git+https://github.com/Quantus-Network/chain#b3f8320e39b8b322d143c35b46b9cbc14d6812fc"
-dependencies = [
- "frame-support",
- "frame-system",
- "log",
- "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain)",
  "parity-scale-codec",
  "scale-info",
  "sp-runtime",
@@ -4176,6 +4164,7 @@ dependencies = [
 [[package]]
 name = "poseidon-resonance"
 version = "0.4.0"
+source = "git+https://github.com/Quantus-Network/poseidon-resonance#dea7b367eeaa4ca927b6f19e55176a43e1088836"
 dependencies = [
  "log",
  "parity-scale-codec",
@@ -4562,7 +4551,7 @@ dependencies = [
  "pallet-preimage",
  "pallet-qpow",
  "pallet-referenda",
- "pallet-reversible-transfers 40.0.1",
+ "pallet-reversible-transfers",
  "pallet-scheduler",
  "pallet-sudo",
  "pallet-timestamp",
