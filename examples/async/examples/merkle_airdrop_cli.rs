@@ -294,7 +294,7 @@ async fn main() -> Result<(), CliError> {
         Command::CreateAirdrop { merkle_root } => {
             info!("Connecting to node at {}", args.node_url);
             let client = JsonrpseeClient::new(&args.node_url).await?;
-            let mut api = Api::<ResonanceRuntimeConfig, _>::new(client);
+            let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
             
             // Remove 0x prefix if present
             let merkle_root = merkle_root.trim_start_matches("0x");
@@ -334,7 +334,7 @@ async fn main() -> Result<(), CliError> {
             info!("Connecting to node at {}", args.node_url);
             let client = JsonrpseeClient::new(&args.node_url).await?;
             let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
-            
+
             info!("Funding airdrop {} with amount {}", id, amount);
             
             let signer = dilithium_bob();
@@ -363,23 +363,17 @@ async fn main() -> Result<(), CliError> {
         Command::Claim { id, amount, proofs, recipient } => {
             info!("Connecting to node");
             let client = JsonrpseeClient::new(&args.node_url).await?;
-            let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
-            
+            let api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
+
             info!("Claiming from airdrop {} for amount {} to recipient {}", id, amount, recipient);
             
             let signer = dilithium_bob();
-            info!("Signer public key: {:?}", signer.public());
+            info!("Signer public key (not used for sending this extrinsic): {:?}", signer.public());
             
-            // The recipient is provided as an argument, parse it to AccountId
             let recipient_account_id = sr25519::Public::from_ss58check(recipient)
                 .map_err(|e| CliError::Custom(format!("Invalid recipient SS58 address: {}", e)))?;
             info!("Recipient account ID: {:?}", recipient_account_id);
             
-            // Set the signer (who pays for the transaction, can be different from recipient)
-            api.set_signer(signer.clone().into());
-            info!("Using signer: {:?}", signer.public());
-            
-            // Convert proof strings to [u8; 32] arrays
             let proof_bytes: Vec<[u8; 32]> = proofs
                 .iter()
                 .map(|p| {
