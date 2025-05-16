@@ -1,6 +1,6 @@
 use codec::Encode;
 use poseidon_resonance::PoseidonHasher;
-use sp_core::{crypto::AccountId32, twox_128, H256};
+use sp_core::{crypto::AccountId32, twox_128, Hasher, H256};
 use sp_state_machine::read_proof_check;
 use sp_trie::StorageProof;
 use substrate_api_client::{
@@ -13,6 +13,7 @@ use trie_db::{
 	node::{Node, NodeHandle},
 	NodeCodec, TrieLayout,
 };
+use substrate_api_client::ac_primitives::DefaultRuntimeConfig;
 
 /// Function to compute the leaf hash for the TransferProof storage map key.
 /// Parameters:
@@ -35,7 +36,15 @@ pub fn compute_transfer_proof_leaf(
     key_bytes.extend_from_slice(&amount.encode());
 
     // Step 2: Hash the concatenated bytes using PoseidonHasher
-    PoseidonHasher::hash(&key_bytes)
+	<PoseidonHasher as Hasher>::hash(&key_bytes)
+}
+
+// Function to check that the 24 byte suffix of the leaf hash is the last [-26, -2] bytes of the leaf node
+pub fn check_leaf(leaf_hash: H256, leaf_node: Vec<u8>) -> bool {
+	let hash_suffix = &leaf_hash.0[8..32];
+	let node_suffix = &leaf_node[leaf_node.len() - 26..leaf_node.len() - 2];
+
+	hash_suffix == node_suffix
 }
 
 pub async fn verify_transfer_proof(
@@ -52,12 +61,12 @@ pub async fn verify_transfer_proof(
     let key_tuple = (nonce, from.clone(), to.clone(), amount);
     println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
     let leaf_hash = compute_transfer_proof_leaf(nonce, &from.clone(), &to.clone(), amount);
-    println!("[+] Leaf hash: {leaf_hash:?}");
+    println!("[+] Leaf hash: {:?}", leaf_hash);
 
 	let pallet_prefix = twox_128("Balances".as_bytes());
 	let storage_prefix = twox_128("TransferProof".as_bytes());
 	let encoded_key = key_tuple.encode();
-	let key_hash = <PoseidonHasher as HashTrait>::hash(&encoded_key);
+	let key_hash = <PoseidonHasher as Hasher>::hash(&encoded_key);
 
 	let correct_storage_key = [&pallet_prefix[..], &storage_prefix[..], key_hash.as_ref()].concat();
 	let storage_key = StorageKey(correct_storage_key.clone());
@@ -74,8 +83,11 @@ pub async fn verify_transfer_proof(
 		.map(|bytes| bytes.as_ref().to_vec()) // Convert each Bytes to Vec<u8>
 		.collect::<Vec<_>>(); // Collect into Vec<Vec<u8>>
 
+	let leaf_checked = check_leaf(leaf_hash, proof_as_u8[0].clone());
+	println!("[+] Leaf check: {leaf_checked}");
+
 	for (i, node_data) in proof_as_u8.iter().enumerate() {
-		let node_hash = PoseidonHasher::hash(node_data);
+		let node_hash = <PoseidonHasher as Hasher>::hash(node_data);
 		match <sp_trie::LayoutV1<PoseidonHasher> as TrieLayout>::Codec::decode(node_data) {
 			Ok(node) =>
 				match &node {
@@ -253,7 +265,7 @@ fn prepare_proof_for_circuit(
 	let mut parts = Vec::<(String, String)>::new();
 	let mut storage_proof = Vec::<String>::new();
 	for node_data in proof.iter() {
-		let hash = hex::encode(PoseidonHasher::hash(node_data));
+		let hash = hex::encode(<PoseidonHasher as Hasher>::hash(node_data));
 		let node_bytes = hex::encode(node_data);
 		if hash == state_root {
 			storage_proof.push(node_bytes);

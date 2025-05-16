@@ -8,7 +8,7 @@
 //! https://github.com/paritytech/subxt/blob/ce0a82e3227efb0eae131f025da5f839d9623e15/subxt/src/config/polkadot.rs
 
 use crate::{
-	config::Config, types::AccountData, AccountId32, BlakeTwo256, Block, ExtrinsicSigner,
+	config::Config, types::AccountData, AccountId32, Block, ExtrinsicSigner,
 	GenericExtrinsicParams, Header, MultiAddress, OpaqueExtrinsic, PlainTip, H256,
 };
 use codec::{Decode, Encode};
@@ -28,7 +28,7 @@ impl Config for ResonanceRuntimeConfig {
 	type AccountId = AccountId32;
 	type Address = MultiAddress<Self::AccountId, u32>;
 	type Signature = ResonanceSignatureScheme;
-	type Hasher = BlakeTwo256;
+	type Hasher = PoseidonHasher;
 	type Header = Header<Self::BlockNumber, PoseidonHasher>;
 	type AccountData = AccountData<Self::Balance>;
 	type ExtrinsicParams = PlainTipExtrinsicParams<Self>;
