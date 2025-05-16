@@ -3514,7 +3514,6 @@ dependencies = [
  "sp-core",
  "sp-io",
  "sp-runtime",
- "sp-std",
 ]
 
 [[package]]
@@ -4164,7 +4163,6 @@ dependencies = [
 [[package]]
 name = "poseidon-resonance"
 version = "0.4.0"
-source = "git+https://github.com/Quantus-Network/poseidon-resonance#dea7b367eeaa4ca927b6f19e55176a43e1088836"
 dependencies = [
  "log",
  "parity-scale-codec",

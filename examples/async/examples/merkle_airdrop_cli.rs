@@ -328,12 +328,13 @@ async fn main() -> Result<(), CliError> {
 		Command::Claim { id, amount, proofs, recipient } => {
 			info!("Connecting to node");
 			let client = JsonrpseeClient::new(&args.node_url).await?;
-			let api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
+			let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
 
 			info!("Claiming from airdrop {} for amount {} to recipient {}", id, amount, recipient);
 
 			let signer = dilithium_bob();
-			info!("Signer public key (not used for sending this extrinsic): {:?}", signer.public());
+			api.set_signer(signer.clone().into());
+			info!("Using signer: {:?}", signer.public());
 
 			let recipient_account_id = sr25519::Public::from_ss58check(recipient)
 				.map_err(|e| CliError::Custom(format!("Invalid recipient SS58 address: {}", e)))?;
