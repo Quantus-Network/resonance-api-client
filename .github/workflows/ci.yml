@@ -62,8 +62,17 @@ jobs:
       - name: Check formatting
         run: cargo fmt -p ac-examples-async -- --check
 
+      - name: Cache taplo
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/bin/taplo
+          key: ${{ runner.os }}-taplo-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-taplo-
+
       - name: Install taplo
-        run: cargo install taplo-cli
+        if: steps.cache-taplo.outputs.cache-hit != 'true'
+        run: cargo install taplo-cli --locked
 
       - name: Check TOML formatting
         run: taplo fmt --check --diff
