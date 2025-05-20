@@ -131,7 +131,7 @@ pub async fn verify_transfer_proof(
 	println!(
 		"Storage proof at block {:?} {:?}",
 		block_hash,
-		proof_as_u8.iter().map(|x| hex::encode(x)).collect::<Vec<_>>()
+		proof_as_u8.iter().map(hex::encode).collect::<Vec<_>>()
 	);
 
 	println!("Storage key: {:?} {:?}", hex::encode(&storage_key), storage_key);
@@ -269,19 +269,15 @@ fn prepare_proof_for_circuit(
 	while !hashes.is_empty() {
 		for i in (0..hashes.len()).rev() {
 			let hash = hashes[i].clone();
-			match storage_proof.last() {
-				Some(last) => match last.find(&hash) {
-					Some(index) => {
-						let (left, right) = last.split_at(index);
-						parts.push((left.to_string(), right.to_string()));
-						storage_proof.push(bytes[i].clone());
-						ordered_hashes.push(hash.clone());
-						hashes.remove(i);
-						bytes.remove(i);
-					},
-					None => {},
-				},
-				None => {},
+			if let Some(last) = storage_proof.last() {
+				if let Some(index) = last.find(&hash) {
+					let (left, right) = last.split_at(index);
+					parts.push((left.to_string(), right.to_string()));
+					storage_proof.push(bytes[i].clone());
+					ordered_hashes.push(hash.clone());
+					hashes.remove(i);
+					bytes.remove(i);
+				}
 			}
 		}
 	}

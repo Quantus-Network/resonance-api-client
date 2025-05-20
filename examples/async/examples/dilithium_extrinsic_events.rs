@@ -1,4 +1,3 @@
-use sp_core::crypto::Ss58Codec;
 /*
 	Copyright 2019 Supercomputing Systems AG
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +12,11 @@ use sp_core::crypto::Ss58Codec;
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-use substrate_api_client::{ac_node_api::RawEventDetails, ac_primitives::{UncheckedExtrinsic, ExtrinsicSigner, Config, resonance_runtime_config::ResonanceRuntimeConfig}, extrinsic::BalancesExtrinsics, rpc::JsonrpseeClient, Api, GetAccountInformation, GetChainInfo, GetStorage, SubmitAndWatch, TransactionStatus, XtStatus};
+use substrate_api_client::{ac_node_api::RawEventDetails, ac_primitives::{UncheckedExtrinsic, ExtrinsicSigner, Config, resonance_runtime_config::ResonanceRuntimeConfig}, extrinsic::BalancesExtrinsics, rpc::JsonrpseeClient, Api, GetAccountInformation, SubmitAndWatch, TransactionStatus, XtStatus};
 use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
-use sp_runtime::{traits::IdentifyAccount, AccountId32};
+use sp_runtime::{traits::IdentifyAccount};
 
 type Hash = <ResonanceRuntimeConfig as Config>::Hash;
-use hex;
-use trie_db::TrieLayout;
 
 mod verify_proof;
 
@@ -42,7 +39,7 @@ async fn main() {
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
 	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
 
-	let es = ExtrinsicSigner::<ResonanceRuntimeConfig>::new(alice_signer.into());
+	let es = ExtrinsicSigner::<ResonanceRuntimeConfig>::new(alice_signer);
 
 	api.set_signer(es);
 
@@ -137,7 +134,7 @@ async fn main() {
 	let expected_balance_of_bob = balance_of_bob + balance_to_transfer;
 	assert_eq!(expected_balance_of_bob, new_balance_of_bob);
 
-	let verified = verify_proof::verify_transfer_proof(api, alice, bob, balance_to_transfer).await;
+	// let verified = verify_proof::verify_transfer_proof(api, alice, bob, balance_to_transfer).await;
 
 }
 
