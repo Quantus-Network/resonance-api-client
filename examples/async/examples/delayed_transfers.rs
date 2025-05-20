@@ -189,7 +189,6 @@ async fn main() {
 	assert_eq!(new_reserve_of_alice, 0);
 	assert_eq!(new_frozen_of_alice, 0);
 
-
 	let verified = verify_proof::verify_transfer_proof(api, alice, bob, scheduled_amount).await;
 	assert!(verified, "Failed to verify transfer proof");
 }
