@@ -255,7 +255,7 @@ impl Args {
 fn decode_merkle_airdrop_error(code: u8) -> &'static str {
 	match code {
 		1 => "Airdrop not found",
-		2 => "Insufficient airdrop balance", 
+		2 => "Insufficient airdrop balance",
 		3 => "Already claimed this airdrop",
 		4 => "Invalid Merkle proof",
 		5 => "Not the airdrop creator",
@@ -342,16 +342,16 @@ async fn main() -> Result<(), CliError> {
 			info!("Connecting to node");
 			let client = JsonrpseeClient::new(&args.node_url).await?;
 			let api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
-		
+
 			info!("Claiming from airdrop {} for amount {} to recipient {}", id, amount, recipient);
-		
+
 			let signer = dilithium_bob();
 			info!("Signer public key (not used for sending this extrinsic): {:?}", signer.public());
-		
+
 			let recipient_account_id = sr25519::Public::from_ss58check(recipient)
 				.map_err(|e| CliError::Custom(format!("Invalid recipient SS58 address: {}", e)))?;
 			info!("Recipient account ID: {:?}", recipient_account_id);
-		
+
 			let proof_bytes: Vec<[u8; 32]> = proofs
 				.iter()
 				.map(|p| {
@@ -368,11 +368,11 @@ async fn main() -> Result<(), CliError> {
 				})
 				.collect::<Result<_, _>>()?; // Collect results, propagating errors
 			info!("Proof bytes: {:?}", proof_bytes);
-		
+
 			// for debugging
 			let encoded_account = recipient_account_id.encode();
 			info!("Encoded account bytes: {:?}", hex::encode(&encoded_account));
-		
+
 			let api_ref = api.clone();
 			// Create and sign the extrinsic
 			let xt = compose_extrinsic!(
@@ -385,11 +385,11 @@ async fn main() -> Result<(), CliError> {
 				proof_bytes
 			)
 			.ok_or_else(|| CliError::Custom("Failed to create extrinsic".to_string()))?;
-		
+
 			info!("Created extrinsic: {:?}", xt);
-		
+
 			info!("Submitting claim transaction...");
-			
+
 			// Replace the direct await/? with a match to handle errors
 			match api.submit_and_watch_extrinsic_until(xt, XtStatus::InBlock).await {
 				Ok(result) => {
@@ -399,24 +399,30 @@ async fn main() -> Result<(), CliError> {
 				Err(e) => {
 					// Try to extract the custom error code
 					let error_str = format!("{:?}", e);
-					
+
 					// Look for patterns like "Custom error: 3" in the error string
 					if let Some(pos) = error_str.find("Custom error: ") {
 						let after_prefix = &error_str[pos + "Custom error: ".len()..];
 						if let Some(end) = after_prefix.find(|c: char| !c.is_ascii_digit()) {
 							let code_str = &after_prefix[..end];
 							if let Ok(code) = code_str.parse::<u8>() {
-								return Err(CliError::Custom(format!("Claim failed: {}", decode_merkle_airdrop_error(code))));
+								return Err(CliError::Custom(format!(
+									"Claim failed: {}",
+									decode_merkle_airdrop_error(code)
+								)));
 							}
 						} else if let Ok(code) = after_prefix.parse::<u8>() {
 							// Handle case where the code is at the end of the string
-							return Err(CliError::Custom(format!("Claim failed: {}", decode_merkle_airdrop_error(code))));
+							return Err(CliError::Custom(format!(
+								"Claim failed: {}",
+								decode_merkle_airdrop_error(code)
+							)));
 						}
 					}
-					
+
 					// If we couldn't extract a code, return the original error
 					Err(CliError::Api(e))
-				}
+				},
 			}
 		},
 	}
