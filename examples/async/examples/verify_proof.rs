@@ -22,20 +22,20 @@ use trie_db::{
 /// - amount: The balance amount transferred.
 /// Returns: The hashed leaf as a `T::Hash`.
 pub fn compute_transfer_proof_leaf(
-    tx_count: u32,
-    from: &AccountId32,
-    to: &AccountId32,
-    amount: u128,
+	tx_count: u32,
+	from: &AccountId32,
+	to: &AccountId32,
+	amount: u128,
 ) -> H256 {
-    // Step 1: Encode the key components into a single byte vector
-    let mut key_bytes = Vec::new();
-    key_bytes.extend_from_slice(&tx_count.encode());
-    key_bytes.extend_from_slice(&from.encode());
-    key_bytes.extend_from_slice(&to.encode());
-    key_bytes.extend_from_slice(&amount.encode());
+	// Step 1: Encode the key components into a single byte vector
+	let mut key_bytes = Vec::new();
+	key_bytes.extend_from_slice(&tx_count.encode());
+	key_bytes.extend_from_slice(&from.encode());
+	key_bytes.extend_from_slice(&to.encode());
+	key_bytes.extend_from_slice(&amount.encode());
 
-    // Step 2: Hash the concatenated bytes using PoseidonHasher
-    PoseidonHasher::hash(&key_bytes)
+	// Step 2: Hash the concatenated bytes using PoseidonHasher
+	PoseidonHasher::hash(&key_bytes)
 }
 
 pub async fn verify_transfer_proof(
@@ -48,11 +48,11 @@ pub async fn verify_transfer_proof(
 	// This gives the chain time to fully process the new block, not sure if it's 100% necessary now
 	tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
 
-    let nonce = api.runtime_api().account_nonce(from.clone(), None).await.unwrap();
-    let key_tuple = (nonce, from.clone(), to.clone(), amount);
-    println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
-    let leaf_hash = compute_transfer_proof_leaf(nonce, &from.clone(), &to.clone(), amount);
-    println!("[+] Leaf hash: {leaf_hash:?}");
+	let nonce = api.runtime_api().account_nonce(from.clone(), None).await.unwrap();
+	let key_tuple = (nonce, from.clone(), to.clone(), amount);
+	println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
+	let leaf_hash = compute_transfer_proof_leaf(nonce, &from.clone(), &to.clone(), amount);
+	println!("[+] Leaf hash: {leaf_hash:?}");
 
 	let pallet_prefix = twox_128("Balances".as_bytes());
 	let storage_prefix = twox_128("TransferProof".as_bytes());
@@ -131,7 +131,7 @@ pub async fn verify_transfer_proof(
 	println!(
 		"Storage proof at block {:?} {:?}",
 		block_hash,
-		proof_as_u8.iter().map(|x| hex::encode(x)).collect::<Vec<_>>()
+		proof_as_u8.iter().map(hex::encode).collect::<Vec<_>>()
 	);
 
 	println!("Storage key: {:?} {:?}", hex::encode(&storage_key), storage_key);
@@ -269,19 +269,15 @@ fn prepare_proof_for_circuit(
 	while !hashes.is_empty() {
 		for i in (0..hashes.len()).rev() {
 			let hash = hashes[i].clone();
-			match storage_proof.last() {
-				Some(last) => match last.find(&hash) {
-					Some(index) => {
-						let (left, right) = last.split_at(index);
-						parts.push((left.to_string(), right.to_string()));
-						storage_proof.push(bytes[i].clone());
-						ordered_hashes.push(hash.clone());
-						hashes.remove(i);
-						bytes.remove(i);
-					},
-					None => {},
-				},
-				None => {},
+			if let Some(last) = storage_proof.last() {
+				if let Some(index) = last.find(&hash) {
+					let (left, right) = last.split_at(index);
+					parts.push((left.to_string(), right.to_string()));
+					storage_proof.push(bytes[i].clone());
+					ordered_hashes.push(hash.clone());
+					hashes.remove(i);
+					bytes.remove(i);
+				}
 			}
 		}
 	}

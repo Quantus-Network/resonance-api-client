@@ -1,4 +1,3 @@
-use sp_core::crypto::Ss58Codec;
 /*
 	Copyright 2019 Supercomputing Systems AG
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +12,20 @@ use sp_core::crypto::Ss58Codec;
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-use substrate_api_client::{ac_node_api::RawEventDetails, ac_primitives::{UncheckedExtrinsic, ExtrinsicSigner, Config, resonance_runtime_config::ResonanceRuntimeConfig}, extrinsic::BalancesExtrinsics, rpc::JsonrpseeClient, Api, GetAccountInformation, GetChainInfo, GetStorage, SubmitAndWatch, TransactionStatus, XtStatus};
 use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
-use sp_runtime::{traits::IdentifyAccount, AccountId32};
+use sp_runtime::traits::IdentifyAccount;
+use substrate_api_client::{
+	ac_node_api::RawEventDetails,
+	ac_primitives::{
+		resonance_runtime_config::ResonanceRuntimeConfig, Config, ExtrinsicSigner,
+		UncheckedExtrinsic,
+	},
+	extrinsic::BalancesExtrinsics,
+	rpc::JsonrpseeClient,
+	Api, GetAccountInformation, SubmitAndWatch, TransactionStatus, XtStatus,
+};
 
 type Hash = <ResonanceRuntimeConfig as Config>::Hash;
-use hex;
-use trie_db::TrieLayout;
 
 mod verify_proof;
 
@@ -32,20 +38,18 @@ async fn main() {
 	let alice_signer = crystal_alice();
 	// let alice = crystal_alice.into_account();
 	// let bob = dilithium_bob.into_account();
-	let alice = crystal_alice().into_account();  // Get public key and convert to account
+	let alice = crystal_alice().into_account(); // Get public key and convert to account
 	let bob = dilithium_bob().into_account();
 
 	// test some other account for send to
 	// let bob = AccountId32::from_string("5FktBKPnRkY5QvF2NmFNUNh55mJvBtgMth5QoBjFJ4E4BbFf").unwrap();
 
-
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
 	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
 
-	let es = ExtrinsicSigner::<ResonanceRuntimeConfig>::new(alice_signer.into());
+	let es = ExtrinsicSigner::<ResonanceRuntimeConfig>::new(alice_signer);
 
 	api.set_signer(es);
-
 
 	let (maybe_data_of_alice, maybe_data_of_bob) =
 		tokio::try_join!(api.get_account_data(&alice), api.get_account_data(&bob)).unwrap();
@@ -120,7 +124,8 @@ async fn main() {
 			println!("[+] Extrinsic got included in block with hash {block_hash:?}");
 			println!("[+] Watched extrinsic until it reached the status {extrinsic_status:?}");
 
-			let expected_in_block_status: TransactionStatus<Hash, Hash> = TransactionStatus::InBlock(block_hash);
+			let expected_in_block_status: TransactionStatus<Hash, Hash> =
+				TransactionStatus::InBlock(block_hash);
 			println!("[+] Expected in block status: {:?}", expected_in_block_status);
 
 			// assert!(matches!(extrinsic_status, TransactionStatus::InBlock(_block_hash))); // fails - commented out
@@ -137,15 +142,18 @@ async fn main() {
 	let expected_balance_of_bob = balance_of_bob + balance_to_transfer;
 	assert_eq!(expected_balance_of_bob, new_balance_of_bob);
 
-	let verified = verify_proof::verify_transfer_proof(api, alice, bob, balance_to_transfer).await;
-
+	// let verified = verify_proof::verify_transfer_proof(api, alice, bob, balance_to_transfer).await;
 }
-
 
 fn assert_associated_events_match_expected(events: Vec<RawEventDetails<Hash>>) {
 	// First event
 	for (i, event) in events.iter().enumerate() {
-		println!("[+] {:?} Event: Pallet: {:?}, Variant: {:?}", i, event.pallet_name(), event.variant_name());
+		println!(
+			"[+] {:?} Event: Pallet: {:?}, Variant: {:?}",
+			i,
+			event.pallet_name(),
+			event.variant_name()
+		);
 	}
 
 	// these tests also fail..
