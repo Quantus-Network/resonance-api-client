@@ -36,12 +36,12 @@ dependencies = [
  "frame-system",
  "hex",
  "log",
- "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain)",
+ "pallet-balances 40.0.1",
  "pallet-recovery",
  "pallet-reversible-transfers",
  "pallet-staking",
  "parity-scale-codec",
- "poseidon-resonance 0.4.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Quantus-Network/poseidon-resonance)",
  "resonance-runtime",
  "serde",
  "serde_json",
@@ -128,7 +128,7 @@ dependencies = [
  "pallet-contracts",
  "pallet-staking",
  "parity-scale-codec",
- "poseidon-resonance 0.4.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Quantus-Network/poseidon-resonance)",
  "primitive-types 0.13.1",
  "scale-info",
  "serde",
@@ -1249,11 +1249,12 @@ dependencies = [
 [[package]]
 name = "dilithium-crypto"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "hdwallet",
  "log",
  "parity-scale-codec",
- "poseidon-resonance 0.3.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Resonance-Network/poseidon-resonance)",
  "rusty-crystals-dilithium",
  "scale-info",
  "sp-core",
@@ -1464,7 +1465,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "976dd42dc7e85965fe702eb8164f21f450704bdde31faefd6471dba214cb594e"
 dependencies = [
  "libc",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2126,6 +2127,7 @@ checksum = "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
 [[package]]
 name = "hdwallet"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "rusty-crystals-dilithium",
 ]
@@ -3363,6 +3365,7 @@ dependencies = [
 [[package]]
 name = "pallet-balances"
 version = "40.0.1"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "docify",
  "frame-benchmarking",
@@ -3370,23 +3373,7 @@ dependencies = [
  "frame-system",
  "log",
  "parity-scale-codec",
- "poseidon-resonance 0.3.0",
- "scale-info",
- "sp-runtime",
-]
-
-[[package]]
-name = "pallet-balances"
-version = "40.0.1"
-source = "git+https://github.com/Quantus-Network/chain#b3f8320e39b8b322d143c35b46b9cbc14d6812fc"
-dependencies = [
- "docify",
- "frame-benchmarking",
- "frame-support",
- "frame-system",
- "log",
- "parity-scale-codec",
- "poseidon-resonance 0.3.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Resonance-Network/poseidon-resonance)",
  "scale-info",
  "sp-runtime",
 ]
@@ -3483,6 +3470,7 @@ dependencies = [
 [[package]]
 name = "pallet-faucet"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -3500,6 +3488,7 @@ dependencies = [
 [[package]]
 name = "pallet-merkle-airdrop"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "binary-merkle-tree",
  "frame-benchmarking",
@@ -3508,7 +3497,7 @@ dependencies = [
  "log",
  "pallet-balances 40.0.1",
  "parity-scale-codec",
- "poseidon-resonance 0.3.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Resonance-Network/poseidon-resonance)",
  "scale-info",
  "sha2 0.10.8",
  "sp-core",
@@ -3519,6 +3508,7 @@ dependencies = [
 [[package]]
 name = "pallet-mining-rewards"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -3552,6 +3542,7 @@ dependencies = [
 [[package]]
 name = "pallet-qpow"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -3624,6 +3615,7 @@ dependencies = [
 [[package]]
 name = "pallet-reversible-transfers"
 version = "40.0.1"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -3800,6 +3792,7 @@ dependencies = [
 [[package]]
 name = "pallet-vesting"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -3818,6 +3811,7 @@ dependencies = [
 [[package]]
 name = "pallet-wormhole"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -3840,8 +3834,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4e69bf016dc406eff7d53a7d3f7cf1c2e72c82b9088aac1118591e36dd2cd3e9"
 dependencies = [
  "bitcoin_hashes",
- "rand 0.8.5",
- "rand_core 0.6.4",
+ "rand 0.7.3",
+ "rand_core 0.5.1",
  "serde",
  "unicode-normalization",
 ]
@@ -4165,8 +4159,8 @@ dependencies = [
 
 [[package]]
 name = "poseidon-resonance"
-version = "0.3.0"
-source = "git+https://github.com/Resonance-Network/poseidon-resonance#f9a27a21d5797d5861765e01dad59c4add31913d"
+version = "0.5.0"
+source = "git+https://github.com/Quantus-Network/poseidon-resonance#fba5320c8f22dd218a64b7a289e0b10e160055c8"
 dependencies = [
  "log",
  "parity-scale-codec",
@@ -4181,7 +4175,8 @@ dependencies = [
 
 [[package]]
 name = "poseidon-resonance"
-version = "0.4.0"
+version = "0.5.0"
+source = "git+https://github.com/Resonance-Network/poseidon-resonance#fba5320c8f22dd218a64b7a289e0b10e160055c8"
 dependencies = [
  "log",
  "parity-scale-codec",
@@ -4315,6 +4310,7 @@ dependencies = [
 [[package]]
 name = "qpow-math"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "log",
  "num-bigint",
@@ -4549,6 +4545,7 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 [[package]]
 name = "resonance-runtime"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "dilithium-crypto",
  "frame-benchmarking",
@@ -4579,7 +4576,7 @@ dependencies = [
  "pallet-vesting",
  "pallet-wormhole",
  "parity-scale-codec",
- "poseidon-resonance 0.3.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Resonance-Network/poseidon-resonance)",
  "primitive-types 0.13.1",
  "scale-info",
  "serde_json",
@@ -4675,7 +4672,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -4729,7 +4726,7 @@ dependencies = [
  "security-framework 3.2.0",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -5361,6 +5358,7 @@ dependencies = [
 [[package]]
 name = "sp-consensus-pow"
 version = "0.41.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "parity-scale-codec",
  "sp-api",
@@ -5371,6 +5369,7 @@ dependencies = [
 [[package]]
 name = "sp-consensus-qpow"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "parity-scale-codec",
  "primitive-types 0.13.1",
@@ -5476,6 +5475,7 @@ dependencies = [
 [[package]]
 name = "sp-faucet"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "parity-scale-codec",
  "sp-api",
@@ -6155,7 +6155,7 @@ dependencies = [
  "getrandom 0.3.2",
  "once_cell",
  "rustix",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -6567,9 +6567,9 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
- "cfg-if 1.0.0",
+ "cfg-if 0.1.10",
  "digest 0.10.7",
- "rand 0.8.5",
+ "rand 0.7.3",
  "static_assertions",
 ]
 
@@ -6702,6 +6702,7 @@ checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
 [[package]]
 name = "verify"
 version = "0.1.0"
+source = "git+https://github.com/Quantus-Network/chain#2b770dfefe6eecb967d55c7162af83c1203cc68d"
 dependencies = [
  "rusty-crystals-dilithium",
 ]
@@ -6916,7 +6917,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
