@@ -17,7 +17,7 @@ tokio-util = "0.7"
 
 # Substrate dependencies
 frame-system = { version = "39.1.0" }
-pallet-balances = { version = "40.0.1" }
+pallet-balances = { version = "40.0.1", git = "https://github.com/Quantus-Network/chain", default-features = false, features = ["std"] }
 pallet-recovery = { version = "39.0.0" }
 pallet-staking = { version = "39.0.1" }
 sp-core = { version = "35.0.0" }
@@ -38,3 +38,4 @@ pallet-reversible-transfers = { workspace = true }
 
 [dependencies]
 codec = { package = "parity-scale-codec", version = "3.7", default-features = false, features = ['derive'] }
+sp-io = { version = "39.0.0", default-features = false, features = ["disable_oom", "disable_panic_handler"] }
