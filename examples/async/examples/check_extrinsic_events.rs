@@ -111,7 +111,8 @@ async fn main() {
 			println!("[+] Extrinsic got included in block with hash {block_hash:?}");
 			println!("[+] Watched extrinsic until it reached the status {extrinsic_status:?}");
 
-			let expected_in_block_status: TransactionStatus<Hash, Hash> = TransactionStatus::InBlock(block_hash);
+			let expected_in_block_status: TransactionStatus<Hash, Hash> =
+				TransactionStatus::InBlock(block_hash);
 			println!("[+] Expected in block status: {:?}", expected_in_block_status);
 
 			// assert!(matches!(extrinsic_status, TransactionStatus::InBlock(_block_hash))); // fails - commented out
@@ -132,7 +133,12 @@ async fn main() {
 fn assert_associated_events_match_expected(events: Vec<RawEventDetails<Hash>>) {
 	// First event
 	for (i, event) in events.iter().enumerate() {
-		println!("[+] {:?} Event: Pallet: {:?}, Variant: {:?}", i, event.pallet_name(), event.variant_name());
+		println!(
+			"[+] {:?} Event: Pallet: {:?}, Variant: {:?}",
+			i,
+			event.pallet_name(),
+			event.variant_name()
+		);
 	}
 
 	// these tests also fail..

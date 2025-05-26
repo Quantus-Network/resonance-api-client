@@ -15,16 +15,13 @@
 
 //! Very simple example that shows how to get some simple storage values.
 
-use codec::Encode;
 use dilithium_crypto::{crystal_alice, dilithium_bob};
 use frame_system::AccountInfo as GenericAccountInfo;
-use pallet_recovery::ActiveRecovery;
 use sp_keyring::Sr25519Keyring;
 use substrate_api_client::{
-	ac_compose_macros::compose_extrinsic,
 	ac_primitives::{Config, ResonanceRuntimeConfig},
 	rpc::JsonrpseeClient,
-	Api, GetAccountInformation, GetStorage, SubmitAndWatch, XtStatus,
+	Api, GetAccountInformation, GetStorage,
 };
 
 use sp_runtime::traits::IdentifyAccount;
@@ -38,10 +35,10 @@ type AccountInfo = GenericAccountInfo<
 >;
 
 type Balance = <ResonanceRuntimeConfig as Config>::Balance;
-type AccountId = <ResonanceRuntimeConfig as Config>::AccountId;
-type BlockNumber = <ResonanceRuntimeConfig as Config>::BlockNumber;
-type Friends = Vec<AccountId>;
-type Address = <ResonanceRuntimeConfig as Config>::Address;
+// type AccountId = <ResonanceRuntimeConfig as Config>::AccountId;
+// type BlockNumber = <ResonanceRuntimeConfig as Config>::BlockNumber;
+// type Friends = Vec<AccountId>;
+// type Address = <ResonanceRuntimeConfig as Config>::Address;
 
 #[tokio::main]
 async fn main() {
@@ -100,7 +97,7 @@ async fn main() {
 	}
 
 	// Create a recovery, so we can fetch an actual ActiveRecovery state from the chain.
-	// NOTE: Disabled because we don't have recovery pallet. We should have it though. 
+	// NOTE: Disabled because we don't have recovery pallet. We should have it though.
 
 	// let alice = Sr25519Keyring::Alice.to_account_id();
 	// let alice_multiaddress: Address = alice.clone().into();

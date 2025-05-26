@@ -36,7 +36,7 @@ dependencies = [
  "frame-system",
  "hex",
  "log",
- "pallet-balances 40.1.0",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain)",
  "pallet-recovery",
  "pallet-reversible-transfers",
  "pallet-staking",
@@ -46,6 +46,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sp-core",
+ "sp-io",
  "sp-keyring",
  "sp-runtime",
  "sp-state-machine",
@@ -257,12 +258,12 @@ dependencies = [
 
 [[package]]
 name = "anstyle-wincon"
-version = "3.0.7"
+version = "3.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca3534e77181a9cc07539ad51f2141fe32f6c3ffd4df76db8ad92346b003ae4e"
+checksum = "6680de5231bd6ee4c6191b8a1325daa282b415391ec9d3a37bd34f2060dc73fa"
 dependencies = [
  "anstyle",
- "once_cell",
+ "once_cell_polyfill",
  "windows-sys 0.59.0",
 ]
 
@@ -548,9 +549,9 @@ checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
 name = "bitflags"
-version = "2.9.0"
+version = "2.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c8214115b7bf84099f1309324e63141d4c5d7cc26862f97a0a857dbefe165bd"
+checksum = "1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967"
 
 [[package]]
 name = "bitvec"
@@ -727,9 +728,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.22"
+version = "1.2.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32db95edf998450acc7881c932f94cd9b05c87b4b2599e8bab064753da4acfd1"
+checksum = "16595d3be041c03b09d08d0858631facccee9221e579704070e6e9e4915d3bc7"
 dependencies = [
  "jobserver",
  "libc",
@@ -851,9 +852,9 @@ dependencies = [
 
 [[package]]
 name = "const-hex"
-version = "1.14.0"
+version = "1.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b0485bab839b018a8f1723fc5391819fea5f8f0f32288ef8a735fd096b6160c"
+checksum = "83e22e0ed40b96a48d3db274f72fd365bd78f67af39b6bbd47e8a15e1c6207ff"
 dependencies = [
  "cfg-if 1.0.0",
  "cpufeatures",
@@ -1248,12 +1249,12 @@ dependencies = [
 [[package]]
 name = "dilithium-crypto"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "hdwallet",
  "log",
  "parity-scale-codec",
- "poseidon-resonance 0.4.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Quantus-Network/poseidon-resonance)",
  "rusty-crystals-dilithium",
  "scale-info",
  "sp-core",
@@ -1459,9 +1460,9 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "errno"
-version = "0.3.11"
+version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "976dd42dc7e85965fe702eb8164f21f450704bdde31faefd6471dba214cb594e"
+checksum = "cea14ef9355e3beab063703aa9dab15afd25f0667c341310c1e5274bb1d0da18"
 dependencies = [
  "libc",
  "windows-sys 0.59.0",
@@ -1597,9 +1598,9 @@ dependencies = [
 
 [[package]]
 name = "frame-benchmarking"
-version = "39.0.0"
+version = "39.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8c221b23f5cc5990830c4010bc01eac1cf401327e2bec362b0d28cb261809958"
+checksum = "243a7b247c6a1ebf89c43eb8f3bfaea60965aa9712dceca781ef09579263d343"
 dependencies = [
  "frame-support",
  "frame-support-procedural",
@@ -1622,9 +1623,9 @@ dependencies = [
 
 [[package]]
 name = "frame-election-provider-solution-type"
-version = "14.0.1"
+version = "14.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8156f209055d352994ecd49e19658c6b469d7c6de923bd79868957d0dcfb6f71"
+checksum = "bc435a406e04540f00979782c45db0534440873ae526e07a290c286cfcb99b09"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -1634,9 +1635,9 @@ dependencies = [
 
 [[package]]
 name = "frame-election-provider-support"
-version = "39.0.0"
+version = "39.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d62cba64438e4f6f8b78c8c7ec1953ba3c3f4933245412b44501b31df0f87ef"
+checksum = "2d5a6d33db65e59084460e153c409c29737b6441fd52159a6f022e9ecd8344c4"
 dependencies = [
  "frame-election-provider-solution-type",
  "frame-support",
@@ -1651,9 +1652,9 @@ dependencies = [
 
 [[package]]
 name = "frame-executive"
-version = "39.1.0"
+version = "39.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e71d2a46f2dfabd97d597de29b69c331fc3ca5602848aa0a235823e675fd0678"
+checksum = "f4c2806f902c7d45223df81eb83ed1e422456cb12984bd77128f2cb4ca29a139"
 dependencies = [
  "aquamarine",
  "frame-support",
@@ -2126,7 +2127,7 @@ checksum = "84b26c544d002229e640969970a2e74021aadf6e2f96372b9c58eff97de08eb3"
 [[package]]
 name = "hdwallet"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "rusty-crystals-dilithium",
 ]
@@ -2265,9 +2266,9 @@ dependencies = [
 
 [[package]]
 name = "hyper-util"
-version = "0.1.11"
+version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "497bbc33a26fdd4af9ed9c70d63f61cf56a938375fbb32df34db9b1cd6d643f2"
+checksum = "cf9f1e950e0d9d1d3c47184416723cf29c0d1f93bd8cccf37e4beb6b44f31710"
 dependencies = [
  "bytes 1.10.1",
  "futures-util",
@@ -2328,9 +2329,9 @@ checksum = "00210d6893afc98edb752b664b8890f0ef174c8adbb8d0be9710fa66fbbf72d3"
 
 [[package]]
 name = "icu_properties"
-version = "2.0.0"
+version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2549ca8c7241c82f59c80ba2a6f415d931c5b58d24fb8412caa1a1f02c49139a"
+checksum = "016c619c1eeb94efb86809b015c58f479963de65bdb6253345c1a1276f22e32b"
 dependencies = [
  "displaydoc",
  "icu_collections",
@@ -2344,9 +2345,9 @@ dependencies = [
 
 [[package]]
 name = "icu_properties_data"
-version = "2.0.0"
+version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8197e866e47b68f8f7d95249e172903bec06004b18b2937f1095d40a0c57de04"
+checksum = "298459143998310acd25ffe6810ed544932242d3f07083eee1084d83a71bd632"
 
 [[package]]
 name = "icu_provider"
@@ -2517,9 +2518,9 @@ checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 
 [[package]]
 name = "jiff"
-version = "0.2.13"
+version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f02000660d30638906021176af16b17498bd0d12813dbfe7b276d8bc7f3c0806"
+checksum = "a194df1107f33c79f4f93d02c80798520551949d59dfad22b6157048a88cca93"
 dependencies = [
  "jiff-static",
  "log",
@@ -2530,9 +2531,9 @@ dependencies = [
 
 [[package]]
 name = "jiff-static"
-version = "0.2.13"
+version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3c30758ddd7188629c6713fc45d1188af4f44c90582311d0c8d8c9907f60c48"
+checksum = "6c6e1db7ed32c6c71b759497fae34bf7933636f75a251b9e736555da426f6442"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2748,7 +2749,7 @@ version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c0ff37bd590ca25063e35af745c343cb7a0271906fb7b37e4813e8f79f00268d"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
  "libc",
  "redox_syscall",
 ]
@@ -2906,9 +2907,9 @@ dependencies = [
 
 [[package]]
 name = "matrixmultiply"
-version = "0.3.9"
+version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9380b911e3e96d10c1f415da0876389aaf1b56759054eeb0de7df940c456ba1a"
+checksum = "a06de3016e9fae57a36fd14dba131fccf49f74b40b7fbdb472f96e361ec71a08"
 dependencies = [
  "autocfg",
  "rawpointer",
@@ -2982,13 +2983,13 @@ dependencies = [
 
 [[package]]
 name = "mio"
-version = "1.0.3"
+version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2886843bf800fba2e3377cff24abf6379b4c4d5c6681eaf9ea5b0d15090450bd"
+checksum = "78bed444cc8a2160f01cbcf811ef18cac863ad68ae8ca62092e8db51d51c761c"
 dependencies = [
  "libc",
  "wasi 0.11.0+wasi-snapshot-preview1",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -3218,6 +3219,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
+name = "once_cell_polyfill"
+version = "1.70.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a4895175b425cb1f87721b59f0f286c2092bd4af812243672510e1ac53e2e0ad"
+
+[[package]]
 name = "opaque-debug"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3235,7 +3242,7 @@ version = "0.10.72"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fedfea7d58a1f73118430a55da6a286e7b044961736ce96a16a17068ea25e5da"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
  "cfg-if 1.0.0",
  "foreign-types",
  "libc",
@@ -3332,7 +3339,7 @@ dependencies = [
 [[package]]
 name = "pallet-balances"
 version = "40.0.1"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "docify",
  "frame-benchmarking",
@@ -3340,7 +3347,23 @@ dependencies = [
  "frame-system",
  "log",
  "parity-scale-codec",
- "poseidon-resonance 0.4.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Quantus-Network/poseidon-resonance)",
+ "scale-info",
+ "sp-runtime",
+]
+
+[[package]]
+name = "pallet-balances"
+version = "40.0.1"
+source = "git+https://github.com/Quantus-Network/chain#17a4cd25e0e40f6344c798e0b2a5bee481f632a6"
+dependencies = [
+ "docify",
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "log",
+ "parity-scale-codec",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Resonance-Network/poseidon-resonance)",
  "scale-info",
  "sp-runtime",
 ]
@@ -3437,13 +3460,13 @@ dependencies = [
 [[package]]
 name = "pallet-faucet"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "frame-support",
  "frame-system",
  "hex",
  "log",
- "pallet-balances 40.0.1",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final)",
  "parity-scale-codec",
  "scale-info",
  "sp-core",
@@ -3455,13 +3478,13 @@ dependencies = [
 [[package]]
 name = "pallet-mining-rewards"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
  "log",
- "pallet-balances 40.0.1",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final)",
  "parity-scale-codec",
  "scale-info",
  "sp-consensus-pow",
@@ -3489,7 +3512,7 @@ dependencies = [
 [[package]]
 name = "pallet-qpow"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -3543,13 +3566,13 @@ dependencies = [
 [[package]]
 name = "pallet-reversible-transfers"
 version = "40.0.1"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
  "log",
- "pallet-balances 40.0.1",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final)",
  "parity-scale-codec",
  "scale-info",
  "sp-runtime",
@@ -3557,9 +3580,9 @@ dependencies = [
 
 [[package]]
 name = "pallet-scheduler"
-version = "40.1.0"
+version = "40.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6efb66648d83ce14caaa5cb062fa54021222e964dc58c7326aee44f27db96b46"
+checksum = "e290bcd7f5e1eefcd5eec1e21efa9ac690c6f97e4534aa3831ff78b7d1fbda68"
 dependencies = [
  "docify",
  "frame-benchmarking",
@@ -3720,13 +3743,13 @@ dependencies = [
 [[package]]
 name = "pallet-vesting"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
  "log",
- "pallet-balances 40.0.1",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final)",
  "pallet-timestamp",
  "parity-scale-codec",
  "scale-info",
@@ -3739,13 +3762,13 @@ dependencies = [
 [[package]]
 name = "pallet-wormhole"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "frame-support",
  "frame-system",
  "lazy_static",
  "log",
- "pallet-balances 40.0.1",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final)",
  "parity-scale-codec",
  "plonky2 1.0.2 (git+https://github.com/Quantus-Network/plonky2)",
  "scale-info",
@@ -3770,9 +3793,9 @@ dependencies = [
 
 [[package]]
 name = "parity-scale-codec"
-version = "3.7.4"
+version = "3.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9fde3d0718baf5bc92f577d652001da0f8d54cd03a7974e118d04fc888dc23d"
+checksum = "799781ae679d79a948e13d4824a40970bfa500058d245760dd857301059810fa"
 dependencies = [
  "arrayvec",
  "bitvec",
@@ -3787,9 +3810,9 @@ dependencies = [
 
 [[package]]
 name = "parity-scale-codec-derive"
-version = "3.7.4"
+version = "3.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "581c837bb6b9541ce7faa9377c20616e4fb7650f6b0f68bc93c827ee504fb7b3"
+checksum = "34b4653168b563151153c9e4c08ebed57fb8262bebfa79711552fa983c623e7a"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -4132,8 +4155,24 @@ dependencies = [
 
 [[package]]
 name = "poseidon-resonance"
-version = "0.4.0"
-source = "git+https://github.com/Quantus-Network/poseidon-resonance#dea7b367eeaa4ca927b6f19e55176a43e1088836"
+version = "0.5.0"
+source = "git+https://github.com/Quantus-Network/poseidon-resonance#fba5320c8f22dd218a64b7a289e0b10e160055c8"
+dependencies = [
+ "log",
+ "parity-scale-codec",
+ "plonky2 1.0.2 (git+https://github.com/Resonance-Network/plonky2)",
+ "scale-info",
+ "serde",
+ "sp-core",
+ "sp-runtime",
+ "sp-storage",
+ "sp-trie",
+]
+
+[[package]]
+name = "poseidon-resonance"
+version = "0.5.0"
+source = "git+https://github.com/Resonance-Network/poseidon-resonance#fba5320c8f22dd218a64b7a289e0b10e160055c8"
 dependencies = [
  "log",
  "parity-scale-codec",
@@ -4149,7 +4188,7 @@ dependencies = [
 [[package]]
 name = "poseidon-resonance"
 version = "0.6.0"
-source = "git+https://github.com/Quantus-Network/poseidon-resonance?branch=storage-hasher-zk#8da8c272d704e440f1f59353d34fceae40f4c2e0"
+source = "git+https://github.com/Quantus-Network/poseidon-resonance?branch=storage-hasher-zk#df923731d1528a2e020389298a775379322308f3"
 dependencies = [
  "log",
  "parity-scale-codec",
@@ -4279,7 +4318,7 @@ version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14cae93065090804185d3b75f0bf93b8eeda30c7a9b4a33d3bdb3988d6229e50"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
  "lazy_static",
  "num-traits",
  "rand 0.8.5",
@@ -4292,7 +4331,7 @@ dependencies = [
 [[package]]
 name = "qpow-math"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "log",
  "num-bigint",
@@ -4444,7 +4483,7 @@ version = "0.5.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "928fca9cf2aa042393a8325b9ead81d2f0df4cb12e1e24cef072922ccd99c5af"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
 ]
 
 [[package]]
@@ -4527,7 +4566,7 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 [[package]]
 name = "resonance-runtime"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "dilithium-crypto",
  "frame-benchmarking",
@@ -4539,7 +4578,7 @@ dependencies = [
  "frame-system-rpc-runtime-api",
  "frame-try-runtime",
  "log",
- "pallet-balances 40.0.1",
+ "pallet-balances 40.0.1 (git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final)",
  "pallet-conviction-voting",
  "pallet-faucet",
  "pallet-mining-rewards",
@@ -4556,7 +4595,7 @@ dependencies = [
  "pallet-vesting",
  "pallet-wormhole",
  "parity-scale-codec",
- "poseidon-resonance 0.4.0",
+ "poseidon-resonance 0.5.0 (git+https://github.com/Quantus-Network/poseidon-resonance)",
  "primitive-types 0.13.1",
  "scale-info",
  "serde_json",
@@ -4648,7 +4687,7 @@ version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c71e83d6afe7ff64890ec6b71d6a69bb8a610ab78ce364b3352876bb4c801266"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
  "errno",
  "libc",
  "linux-raw-sys",
@@ -4731,14 +4770,14 @@ dependencies = [
 
 [[package]]
 name = "rustversion"
-version = "1.0.20"
+version = "1.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eded382c5f5f786b989652c49544c4877d9f015cc22e145a5ea8ea66c2921cd2"
+checksum = "8a0d197bd2c9dc6e53b84da9556a69ba4cdfab8619eb41a8bd1cc2027a0f6b1d"
 
 [[package]]
 name = "rusty-crystals-dilithium"
 version = "1.0.0"
-source = "git+https://gitlab.com/resonance-network/rusty-crystals.git#4932ee6fbeb67499b5a01e835e842c0e3295f419"
+source = "git+https://gitlab.com/resonance-network/rusty-crystals.git#035445bb319a176226d756e397151ab24dee2eff"
 dependencies = [
  "sha2 0.10.9",
 ]
@@ -4999,7 +5038,7 @@ version = "2.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "897b2245f0b511c87893af39b033e5ca9cce68824c4d7e7630b5a1d339658d02"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
  "core-foundation 0.9.4",
  "core-foundation-sys",
  "libc",
@@ -5012,7 +5051,7 @@ version = "3.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "271720403f46ca04f7ba6f55d438f8bd878d6b8ca0a1046e8228c4145bcbb316"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
  "core-foundation 0.10.0",
  "core-foundation-sys",
  "libc",
@@ -5286,9 +5325,9 @@ dependencies = [
 
 [[package]]
 name = "sp-api-proc-macro"
-version = "21.0.0"
+version = "21.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37f8b9621cfa68a45d6f9c124e672b8f6780839a6c95279a7877d244fef8d1dc"
+checksum = "e1b4dc9405403cef6bf181dba43bfd157f8900a8169e9975ece77be54491dad8"
 dependencies = [
  "Inflector",
  "blake2",
@@ -5341,7 +5380,7 @@ dependencies = [
 [[package]]
 name = "sp-consensus-pow"
 version = "0.41.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "parity-scale-codec",
  "sp-api",
@@ -5352,7 +5391,7 @@ dependencies = [
 [[package]]
 name = "sp-consensus-qpow"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "parity-scale-codec",
  "primitive-types 0.13.1",
@@ -5458,7 +5497,7 @@ dependencies = [
 [[package]]
 name = "sp-faucet"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "parity-scale-codec",
  "sp-api",
@@ -5564,9 +5603,9 @@ dependencies = [
 
 [[package]]
 name = "sp-npos-elections"
-version = "35.0.0"
+version = "35.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6df43d267689ec0e10e61eff57543af326f769481215cd43022e791c32ce30a3"
+checksum = "a26266f752840c9bc2cf37a273453407f5e28dd48ed5c1e6271cf75acc843b59"
 dependencies = [
  "parity-scale-codec",
  "scale-info",
@@ -5885,9 +5924,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "staging-xcm"
-version = "15.0.3"
+version = "15.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b570c175519cb507fd7c16d69c43f77e87853cc7cc0d88bf4aabca028775363b"
+checksum = "40fdb8384388024e85d9c22bfd9a79d47a07f589cd276e94ead79b5c05f6910c"
 dependencies = [
  "array-bytes 6.2.3",
  "bounded-collections",
@@ -5907,9 +5946,9 @@ dependencies = [
 
 [[package]]
 name = "staging-xcm-builder"
-version = "18.2.0"
+version = "18.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb41713b55123a0ec0d2690899cce5cd7354217455650f3bc80c75dd39ad8f02"
+checksum = "807d4c9e1f688b98df437f6d146c873e7f4464f5835ed3ab15a6864b96deeb7e"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -5930,9 +5969,9 @@ dependencies = [
 
 [[package]]
 name = "staging-xcm-executor"
-version = "18.0.2"
+version = "18.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c901632fd40c746e0607335d7d720949eb46f2d08800404f19ab5be2cdcff410"
+checksum = "59ce69c5c34e910df78b213e7c0f9b3c0f79ad24e5e66587a9dbe7b3ee09ece6"
 dependencies = [
  "environmental",
  "frame-benchmarking",
@@ -6300,14 +6339,14 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.45.0"
+version = "1.45.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2513ca694ef9ede0fb23fe71a4ee4107cb102b9dc1930f6d0fd77aae068ae165"
+checksum = "75ef51a33ef1da925cea3e4eb122833cb377c61439ca401b770f54902b806779"
 dependencies = [
  "backtrace",
  "bytes 1.10.1",
  "libc",
- "mio 1.0.3",
+ "mio 1.0.4",
  "pin-project-lite",
  "socket2",
  "tokio-macros",
@@ -6679,7 +6718,7 @@ checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
 [[package]]
 name = "verify"
 version = "0.1.0"
-source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#72cf98721518ef97f3913b8b5218c715468fc4b0"
+source = "git+https://github.com/Quantus-Network/chain?branch=wormhole-verify-final#9bffc0166f93f8049510d96b0dedd3445b5befe0"
 dependencies = [
  "rusty-crystals-dilithium",
 ]
@@ -7075,7 +7114,7 @@ version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6f42320e61fe2cfd34354ecb597f86f413484a798ba44a8ca1165c58d42da6c1"
 dependencies = [
- "bitflags 2.9.0",
+ "bitflags 2.9.1",
 ]
 
 [[package]]
