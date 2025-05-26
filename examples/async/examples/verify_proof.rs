@@ -35,7 +35,7 @@ pub fn compute_transfer_proof_leaf(
     key_bytes.extend_from_slice(&to.encode());
     key_bytes.extend_from_slice(&amount.encode());
 	// Step 2: Hash the concatenated bytes using PoseidonHasher
-	PoseidonHasher::hash_storage(&key_bytes)
+	PoseidonHasher::hash_storage::<AccountId32>(&key_bytes)
 }
 
 // Function to check that the 24 byte suffix of the leaf hash is the last [-26, -2] bytes of the leaf node

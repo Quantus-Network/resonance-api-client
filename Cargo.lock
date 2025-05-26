@@ -4146,7 +4146,7 @@ dependencies = [
 [[package]]
 name = "poseidon-resonance"
 version = "0.6.0"
-source = "git+https://github.com/Quantus-Network/poseidon-resonance?branch=storage-hasher-zk#df923731d1528a2e020389298a775379322308f3"
+source = "git+https://github.com/Quantus-Network/poseidon-resonance#e39fff549e4bef8f97b1b96e0857c47a6a7eb5ab"
 dependencies = [
  "log",
  "parity-scale-codec",
