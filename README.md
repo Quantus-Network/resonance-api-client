@@ -36,6 +36,13 @@ curl https://sh.rustup.rs -sSf | sh
 # Install the rust toolchain specified in rust-toolchain.toml
 rustup show
 ```
+
+Recommmended: Set this env variable to fetch git repos using the system git CLI
+
+```sh
+export CARGO_NET_GIT_FETCH_WITH_CLI=true
+```
+
 ###  Substrate node
 
 To execute the examples, a running substrate node is needed. You can download a node artifact from substrate directly: https://github.com/paritytech/substrate

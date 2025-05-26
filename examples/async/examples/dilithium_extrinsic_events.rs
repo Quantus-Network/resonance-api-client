@@ -12,18 +12,23 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
-use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_node_api::RawEventDetails,
 	ac_primitives::{
-		resonance_runtime_config::ResonanceRuntimeConfig, Config, ExtrinsicSigner,
-		UncheckedExtrinsic,
+		UncheckedExtrinsic, ExtrinsicSigner, Config, resonance_runtime_config::ResonanceRuntimeConfig
 	},
 	extrinsic::BalancesExtrinsics,
 	rpc::JsonrpseeClient,
-	Api, GetAccountInformation, SubmitAndWatch, TransactionStatus, XtStatus,
+	Api,
+	GetAccountInformation,
+	GetChainInfo,
+	GetStorage,
+	SubmitAndWatch,
+	TransactionStatus,
+	XtStatus
 };
+use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
+use sp_runtime::{traits::IdentifyAccount};
 
 type Hash = <ResonanceRuntimeConfig as Config>::Hash;
 
@@ -142,7 +147,7 @@ async fn main() {
 	let expected_balance_of_bob = balance_of_bob + balance_to_transfer;
 	assert_eq!(expected_balance_of_bob, new_balance_of_bob);
 
-	// let verified = verify_proof::verify_transfer_proof(api, alice, bob, balance_to_transfer).await;
+	let verified = verify_proof::verify_transfer_proof(api, alice, bob, balance_to_transfer).await;
 }
 
 fn assert_associated_events_match_expected(events: Vec<RawEventDetails<Hash>>) {
