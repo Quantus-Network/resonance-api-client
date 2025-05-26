@@ -34,11 +34,11 @@ members = [
 #pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
 #poseidon-resonance = { path = "../poseidon-resonance", default-features = false, features = ["serde"] }
 
-dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false, branch = "wormhole-verify-final" }
-resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false, branch = "wormhole-verify-final" }
+dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false}
 # pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
 poseidon-resonance = { git = "https://github.com/Quantus-Network/poseidon-resonance", default-features = false, features = ["serde"], branch = "storage-hasher-zk" }
-pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false, branch = "wormhole-verify-final" }
+pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false}
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "3.7", default-features = false, features = ["derive"] }
 hex = { version = "0.4", default-features = false, features = ["alloc"] }
