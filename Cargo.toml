@@ -28,19 +28,20 @@ members = [
 [workspace.dependencies]
 
 ## Note: Use these local paths for testing the latest changes you made
-# dilithium-crypto = { path = "../backbone/dilithium-crypto", default-features = false, features = ["full_crypto"] }
-# resonance-runtime = { path = "../backbone/runtime", default-features = false }
+dilithium-crypto = { path = "../backbone/dilithium-crypto", default-features = false, features = ["full_crypto"] }
+resonance-runtime = { path = "../backbone/runtime", default-features = false }
 # pallet-merkle-airdrop = { path = "../backbone/pallets/merkle-airdrop", default-features = false }
-#pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
-#poseidon-resonance = { path = "../poseidon-resonance", default-features = false, features = ["serde"] }
-
-dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false}
-resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false}
-# pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
+pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
 poseidon-resonance = { git = "https://github.com/Quantus-Network/poseidon-resonance", default-features = false, features = ["serde"] }
-pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+
+# dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+# resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+# pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
+# pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false}
 serde = { version = "1.0", default-features = false, features = ["derive"] }
-codec = { package = "parity-scale-codec", version = "3.7", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.7", default-features = false, features = [
+    "derive",
+] }
 hex = { version = "0.4", default-features = false, features = ["alloc"] }
 
 [dependencies]
@@ -51,8 +52,12 @@ sp-crypto-hashing = { version = "0.1.0", default-features = false }
 sp-inherents = { version = "35.0.0", default-features = false }
 sp-runtime = { version = "40.1.0" }
 sp-runtime-interface = { version = "29.0.0", default-features = false }
-sp-storage = { version = "22.0.0", default-features = false, features = ["serde"] }
-sp-version = { version = "38.0.0", default-features = false, features = ["serde"] }
+sp-storage = { version = "22.0.0", default-features = false, features = [
+    "serde",
+] }
+sp-version = { version = "38.0.0", default-features = false, features = [
+    "serde",
+] }
 
 ac-compose-macros = { path = "compose-macros", version = "1.17", default-features = false }
 ac-node-api = { path = "node-api", version = "1.17", default-features = false }
@@ -61,15 +66,26 @@ async-trait = "0.1"
 codec = { workspace = true, default-features = false, features = ["derive"] }
 derive_more = { version = "2.0", default-features = false, features = ["from"] }
 dilithium-crypto.workspace = true
-frame-metadata = { version = "18.0", default-features = false, features = ["current", "serde_full", "decode"] }
+frame-metadata = { version = "18.0", default-features = false, features = [
+    "current",
+    "serde_full",
+    "decode",
+] }
 futures-util = { version = "0.3", default-features = false }
 hex = { version = "0.4", default-features = false, features = ["alloc"] }
-jsonrpsee = { version = "0.24", optional = true, features = ["async-client", "client-ws-transport-tls", "jsonrpsee-types"] }
+jsonrpsee = { version = "0.24", optional = true, features = [
+    "async-client",
+    "client-ws-transport-tls",
+    "jsonrpsee-types",
+] }
 log = { version = "0.4", default-features = false }
 maybe-async = { version = "0.2" }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0", default-features = false }
-tungstenite = { version = "0.26", optional = true, features = ["native-tls", "url"] }
+tungstenite = { version = "0.26", optional = true, features = [
+    "native-tls",
+    "url",
+] }
 url = { version = "2.5", optional = true }
 ws = { version = "0.9", optional = true, features = ["ssl"] }
 
@@ -77,6 +93,10 @@ ws = { version = "0.9", optional = true, features = ["ssl"] }
 ac-node-api = { path = "node-api", version = "1.17", features = ["mocks"] }
 scale-info = { version = "2.1", features = ["derive"] }
 test-case = "3.1"
+
+[patch.crates-io]
+sp-trie = { path = "../zk-trie" }
+sp-state-machine = { path = "../zk-state-machine" }
 
 [features]
 default = ["std", "jsonrpsee-client"]

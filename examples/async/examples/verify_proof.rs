@@ -60,7 +60,7 @@ pub async fn verify_transfer_proof(
     let key_tuple = (nonce, from.clone(), to.clone(), amount);
     println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
     let leaf_hash = compute_transfer_proof_leaf(nonce, &from.clone(), &to.clone(), amount);
-    println!("[+] Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}", leaf_hash, from.encode(), to.encode(), amount.encode());
+    println!("[+] Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}", hex::encode(leaf_hash), from.encode(), to.encode(), amount.encode());
 
 	let pallet_prefix = twox_128("Balances".as_bytes());
 	let storage_prefix = twox_128("TransferProof".as_bytes());
@@ -150,11 +150,11 @@ pub async fn verify_transfer_proof(
 	prepare_proof_for_circuit(proof_as_u8.clone(), hex::encode(state_root));
 
 	println!("Header: {:?} State root: {:?}", header, state_root);
-	let expected_value = true.encode();
+	let expected_value = ().encode();
 	println!("Expected value: {:?}", expected_value);
 
 	let storage_value = api
-		.get_storage_by_key::<bool>(storage_key.clone(), Some(block_hash))
+		.get_storage_by_key::<()>(storage_key.clone(), Some(block_hash))
 		.await
 		.unwrap();
 	println!("Storage value: {:?}", storage_value);
