@@ -43,6 +43,8 @@ codec = { package = "parity-scale-codec", version = "3.7", default-features = fa
     "derive",
 ] }
 hex = { version = "0.4", default-features = false, features = ["alloc"] }
+sp-state-machine = { git = "https://github.com/Quantus-Network/zk-state-machine" }
+sp-trie = { git = "https://github.com/Quantus-Network/zk-trie" }
 
 [dependencies]
 frame-support = { version = "39.1.0", default-features = false, optional = true }
@@ -58,7 +60,6 @@ sp-storage = { version = "22.0.0", default-features = false, features = [
 sp-version = { version = "38.0.0", default-features = false, features = [
     "serde",
 ] }
-
 ac-compose-macros = { path = "compose-macros", version = "1.17", default-features = false }
 ac-node-api = { path = "node-api", version = "1.17", default-features = false }
 ac-primitives = { path = "primitives", version = "1.17", default-features = false }
@@ -95,8 +96,8 @@ scale-info = { version = "2.1", features = ["derive"] }
 test-case = "3.1"
 
 [patch.crates-io]
-sp-trie = { path = "../zk-trie" }
-sp-state-machine = { path = "../zk-state-machine" }
+sp-trie = { git = "https://github.com/Quantus-Network/zk-trie" }
+sp-state-machine = { git = "https://github.com/Quantus-Network/zk-state-machine" }
 
 [features]
 default = ["std", "jsonrpsee-client"]
