@@ -5,7 +5,6 @@ license = "Apache-2.0"
 edition = "2021"
 
 [dev-dependencies]
-blake2 = "0.10.6"
 clap = { version = "4.5", features = ["derive"] }
 env_logger = "0.11"
 log = "0.4"
@@ -19,7 +18,6 @@ frame-system = { version = "39.1.0" }
 pallet-balances = { version = "40.0.1", git = "https://github.com/Quantus-Network/chain", default-features = false, features = [
     "std",
 ] }
-pallet-recovery = { version = "39.0.0" }
 pallet-staking = { version = "39.0.1" }
 sp-core = { version = "35.0.0" }
 sp-keyring = { version = "40.0.0" }
@@ -31,10 +29,8 @@ dilithium-crypto = { workspace = true, default-features = false, features = [
 resonance-runtime = { workspace = true, default-features = false, features = [
     "std",
 ] }
-# pallet-merkle-airdrop = { workspace = true, default-features = false, features=["std"] }
 poseidon-resonance = { workspace = true, default-features = false }
 trie-db = { version = "0.29.1", default-features = false }
-#sp-trie = { version = "38.0.0", default-features = false }
 hex = { version = "0.4.3", default-features = false }
 # local deps
 substrate-api-client = { path = "../..", version = "1.17", features = [
@@ -50,7 +46,7 @@ sp-io = { version = "39.0.0", default-features = false, features = [
     "disable_oom",
     "disable_panic_handler",
 ] }
-sp-trie = { workspace = true, default-features = false, features = [
+sp-trie = { workspace = true, features = [
     "std",
 ] }
-sp-state-machine = { workspace = true, default-features = false, features = ["std"] }
+sp-state-machine = { workspace = true, features = ["std"] }

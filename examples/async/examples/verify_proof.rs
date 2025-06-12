@@ -2,9 +2,9 @@ use codec::Encode;
 use poseidon_resonance::PoseidonHasher;
 use sp_core::{crypto::AccountId32, twox_128, Hasher, H256};
 use sp_state_machine::read_proof_check;
-use sp_trie::StorageProof;
+use sp_state_machine::StorageProof;
 use substrate_api_client::{
-	ac_primitives::{HashTrait, ResonanceRuntimeConfig, StorageKey},
+	ac_primitives::{DefaultRuntimeConfig, HashTrait, ResonanceRuntimeConfig, StorageKey},
 	rpc::JsonrpseeClient,
 	runtime_api::AccountNonceApi,
 	Api, GetChainInfo, GetStorage,
@@ -13,7 +13,6 @@ use trie_db::{
 	node::{Node, NodeHandle},
 	NodeCodec, TrieLayout,
 };
-use substrate_api_client::ac_primitives::DefaultRuntimeConfig;
 
 /// Function to compute the leaf hash for the TransferProof storage map key.
 /// Parameters:
@@ -23,25 +22,32 @@ use substrate_api_client::ac_primitives::DefaultRuntimeConfig;
 /// - amount: The balance amount transferred.
 /// Returns: The hashed leaf as a `T::Hash`.
 pub fn compute_transfer_proof_leaf(
-    tx_count: u32,
-    from: &AccountId32,
-    to: &AccountId32,
-    amount: u128,
+	tx_count: u32,
+	from: &AccountId32,
+	to: &AccountId32,
+	amount: u128,
 ) -> [u8; 32] {
-    // Step 1: Encode the key components into a single byte vector
-    let mut key_bytes = Vec::new();
-    key_bytes.extend_from_slice(&tx_count.encode());
-    key_bytes.extend_from_slice(&from.encode());
-    key_bytes.extend_from_slice(&to.encode());
-    key_bytes.extend_from_slice(&amount.encode());
+	// Step 1: Encode the key components into a single byte vector
+	let mut key_bytes = Vec::new();
+	key_bytes.extend_from_slice(&tx_count.encode());
+	key_bytes.extend_from_slice(&from.encode());
+	key_bytes.extend_from_slice(&to.encode());
+	key_bytes.extend_from_slice(&amount.encode());
 	// Step 2: Hash the concatenated bytes using PoseidonHasher
 	PoseidonHasher::hash_storage::<AccountId32>(&key_bytes)
 }
 
 // Function to check that the 24 byte suffix of the leaf hash is the last [-26, -2] bytes of the leaf node
-pub fn check_leaf(leaf_hash: &[u8;32], leaf_node: Vec<u8>) -> bool {
+pub fn check_leaf(leaf_hash: &[u8; 32], leaf_node: Vec<u8>) -> bool {
 	let hash_suffix = &leaf_hash[8..32];
-	let node_suffix = &leaf_node[leaf_node.len() - 26..leaf_node.len() - 2];
+	let node_suffix = &leaf_node.clone()[leaf_node.len() - 32..leaf_node.len() - 8];
+	println!(
+		"[+] Leaf hash: {:?} leaf hash suffix: {:?} leaf node: {:?} leaf node suffix: {:?}",
+		hex::encode(leaf_hash),
+		hex::encode(hash_suffix),
+		hex::encode(leaf_node),
+		hex::encode(node_suffix)
+	);
 
 	hash_suffix == node_suffix
 }
@@ -56,15 +62,22 @@ pub async fn verify_transfer_proof(
 	// This gives the chain time to fully process the new block, not sure if it's 100% necessary now
 	tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
 
-    let nonce = api.runtime_api().account_nonce(from.clone(), None).await.unwrap();
-    let key_tuple = (nonce, from.clone(), to.clone(), amount);
-    println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
-    let leaf_hash = compute_transfer_proof_leaf(nonce, &from.clone(), &to.clone(), amount);
-    println!("[+] Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}", hex::encode(leaf_hash), from.encode(), to.encode(), amount.encode());
+	let nonce = api.runtime_api().account_nonce(from.clone(), None).await.unwrap();
+	let key_tuple = (nonce, from.clone(), to.clone(), amount);
+	println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
+	let leaf_hash = compute_transfer_proof_leaf(nonce, &from.clone(), &to.clone(), amount);
+	println!(
+		"[+] Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}",
+		hex::encode(leaf_hash),
+		from.encode(),
+		to.encode(),
+		amount.encode()
+	);
 
 	let pallet_prefix = twox_128("Balances".as_bytes());
 	let storage_prefix = twox_128("TransferProof".as_bytes());
-	let correct_storage_key = [&pallet_prefix[..], &storage_prefix[..], leaf_hash.as_ref()].concat();
+	let correct_storage_key =
+		[&pallet_prefix[..], &storage_prefix[..], leaf_hash.as_ref()].concat();
 	let storage_key = StorageKey(correct_storage_key.clone());
 
 	let proof = api
@@ -79,7 +92,7 @@ pub async fn verify_transfer_proof(
 		.map(|bytes| bytes.as_ref().to_vec()) // Convert each Bytes to Vec<u8>
 		.collect::<Vec<_>>(); // Collect into Vec<Vec<u8>>
 
-	let leaf_checked = check_leaf(&leaf_hash, proof_as_u8[0].clone());
+	let leaf_checked = check_leaf(&leaf_hash, proof_as_u8[proof_as_u8.len() - 1].clone());
 	println!("[+] Leaf check: {leaf_checked}");
 
 	for (i, node_data) in proof_as_u8.iter().enumerate() {
