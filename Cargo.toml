@@ -34,13 +34,14 @@ members = [
 #pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
 poseidon-resonance = { git = "https://github.com/Quantus-Network/poseidon-resonance", default-features = false, features = ["serde"] }
 
- dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false}
- resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false}
- pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
- pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false }
+resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false }
+pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
+pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "3.7", default-features = false, features = [
     "derive",
+
 ] }
 hex = { version = "0.4", default-features = false, features = ["alloc"] }
 sp-state-machine = { git = "https://github.com/Quantus-Network/zk-state-machine", default-features = false }
@@ -48,19 +49,6 @@ sp-trie = { git = "https://github.com/Quantus-Network/zk-trie", default-features
 #sp-trie = { path = "../zk-trie", default-features = false }
 
 [dependencies]
-frame-support = { version = "39.1.0", default-features = false, optional = true }
-frame-system = { version = "39.1.0" }
-sp-core = { version = "35.0.0" }
-sp-crypto-hashing = { version = "0.1.0", default-features = false }
-sp-inherents = { version = "35.0.0", default-features = false }
-sp-runtime = { version = "40.1.0" }
-sp-runtime-interface = { version = "29.0.0", default-features = false }
-sp-storage = { version = "22.0.0", default-features = false, features = [
-    "serde",
-] }
-sp-version = { version = "38.0.0", default-features = false, features = [
-    "serde",
-] }
 ac-compose-macros = { path = "compose-macros", version = "1.17", default-features = false }
 ac-node-api = { path = "node-api", version = "1.17", default-features = false }
 ac-primitives = { path = "primitives", version = "1.17", default-features = false }
@@ -73,6 +61,8 @@ frame-metadata = { version = "18.0", default-features = false, features = [
     "serde_full",
     "decode",
 ] }
+frame-support = { version = "39.1.0", default-features = false, optional = true }
+frame-system = { version = "39.1.0" }
 futures-util = { version = "0.3", default-features = false }
 hex = { version = "0.4", default-features = false, features = ["alloc"] }
 jsonrpsee = { version = "0.24", optional = true, features = [
@@ -84,6 +74,17 @@ log = { version = "0.4", default-features = false }
 maybe-async = { version = "0.2" }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0", default-features = false }
+sp-core = { version = "35.0.0" }
+sp-crypto-hashing = { version = "0.1.0", default-features = false }
+sp-inherents = { version = "35.0.0", default-features = false }
+sp-runtime = { version = "40.1.0" }
+sp-runtime-interface = { version = "29.0.0", default-features = false }
+sp-storage = { version = "22.0.0", default-features = false, features = [
+    "serde",
+] }
+sp-version = { version = "38.0.0", default-features = false, features = [
+    "serde",
+] }
 tungstenite = { version = "0.26", optional = true, features = [
     "native-tls",
     "url",
