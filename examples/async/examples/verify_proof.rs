@@ -1,8 +1,7 @@
 use codec::Encode;
 use poseidon_resonance::PoseidonHasher;
 use sp_core::{crypto::AccountId32, twox_128, Hasher, H256};
-use sp_state_machine::read_proof_check;
-use sp_state_machine::StorageProof;
+use sp_state_machine::{read_proof_check, StorageProof};
 use substrate_api_client::{
 	ac_primitives::{DefaultRuntimeConfig, HashTrait, ResonanceRuntimeConfig, StorageKey},
 	rpc::JsonrpseeClient,
