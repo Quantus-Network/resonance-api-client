@@ -28,23 +28,24 @@ members = [
 [workspace.dependencies]
 
 ## Note: Use these local paths for testing the latest changes you made
-dilithium-crypto = { path = "../backbone/dilithium-crypto", default-features = false, features = ["full_crypto"] }
-resonance-runtime = { path = "../backbone/runtime", default-features = false }
+#dilithium-crypto = { path = "../backbone/dilithium-crypto", default-features = false, features = ["full_crypto"] }
+#resonance-runtime = { path = "../backbone/runtime", default-features = false }
 # pallet-merkle-airdrop = { path = "../backbone/pallets/merkle-airdrop", default-features = false }
-pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
+#pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
 poseidon-resonance = { git = "https://github.com/Quantus-Network/poseidon-resonance", default-features = false, features = ["serde"] }
 
-# dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false}
-# resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false}
-# pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
-# pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+ dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+ resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false}
+ pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
+ pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false}
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 codec = { package = "parity-scale-codec", version = "3.7", default-features = false, features = [
     "derive",
 ] }
 hex = { version = "0.4", default-features = false, features = ["alloc"] }
-sp-state-machine = { git = "https://github.com/Quantus-Network/zk-state-machine" }
-sp-trie = { git = "https://github.com/Quantus-Network/zk-trie" }
+sp-state-machine = { git = "https://github.com/Quantus-Network/zk-state-machine", default-features = false }
+sp-trie = { git = "https://github.com/Quantus-Network/zk-trie", default-features = false }
+#sp-trie = { path = "../zk-trie", default-features = false }
 
 [dependencies]
 frame-support = { version = "39.1.0", default-features = false, optional = true }
@@ -97,7 +98,9 @@ test-case = "3.1"
 
 [patch.crates-io]
 sp-trie = { git = "https://github.com/Quantus-Network/zk-trie" }
+#sp-trie = { path = "../zk-trie" }
 sp-state-machine = { git = "https://github.com/Quantus-Network/zk-state-machine" }
+#sp-state-machine = { path = "../zk-state-machine" }
 
 [features]
 default = ["std", "jsonrpsee-client"]
