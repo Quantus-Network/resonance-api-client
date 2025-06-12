@@ -56,12 +56,12 @@ pub async fn verify_transfer_proof(
 	api: Api<ResonanceRuntimeConfig, JsonrpseeClient>,
 	from: AccountId32,
 	to: AccountId32,
-	amount: u128,
+	mut amount: u128,
 ) -> bool {
 	let block_hash = api.get_block_hash(None).await.unwrap().unwrap();
 	// This gives the chain time to fully process the new block, not sure if it's 100% necessary now
 	tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
-
+	// amount += 1;
 	let nonce = api.runtime_api().account_nonce(from.clone(), None).await.unwrap();
 	let key_tuple = (nonce, from.clone(), to.clone(), amount);
 	println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
