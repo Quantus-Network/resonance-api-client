@@ -46,7 +46,7 @@ sp-io = { version = "39.0.0", default-features = false, features = [
     "disable_oom",
     "disable_panic_handler",
 ] }
+sp-state-machine = { workspace = true, features = ["std"] }
 sp-trie = { workspace = true, features = [
     "std",
 ] }
-sp-state-machine = { workspace = true, features = ["std"] }
