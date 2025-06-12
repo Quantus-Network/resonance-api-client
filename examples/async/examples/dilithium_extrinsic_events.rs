@@ -12,23 +12,19 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
+use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
+use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_node_api::RawEventDetails,
 	ac_primitives::{
-		UncheckedExtrinsic, ExtrinsicSigner, Config, resonance_runtime_config::ResonanceRuntimeConfig
+		resonance_runtime_config::ResonanceRuntimeConfig, Config, ExtrinsicSigner,
+		UncheckedExtrinsic,
 	},
 	extrinsic::BalancesExtrinsics,
 	rpc::JsonrpseeClient,
-	Api,
-	GetAccountInformation,
-	GetChainInfo,
-	GetStorage,
-	SubmitAndWatch,
-	TransactionStatus,
-	XtStatus
+	Api, GetAccountInformation, GetChainInfo, GetStorage, SubmitAndWatch, TransactionStatus,
+	XtStatus,
 };
-use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
-use sp_runtime::{traits::IdentifyAccount};
 
 type Hash = <ResonanceRuntimeConfig as Config>::Hash;
 
