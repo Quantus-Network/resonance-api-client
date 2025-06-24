@@ -35,6 +35,10 @@ hex = { version = "0.4.3", default-features = false }
 substrate-api-client = { path = "../..", version = "1.17", features = ["staking-xt", "contracts-xt", "jsonrpsee-client"] }
 pallet-reversible-transfers = { workspace = true }
 
+#[[example]]
+#name = "sudo"
+#path = "examples/sudo.rs"
+
 [dependencies]
 codec = { workspace = true, default-features = false, features = ['derive'] }
 sp-io = { version = "39.0.0", default-features = false, features = ["disable_oom", "disable_panic_handler"] }

@@ -81,7 +81,7 @@ async fn main() {
 pub async fn send_code_update_extrinsic(
 	api: &substrate_api_client::Api<RococoRuntimeConfig, JsonrpseeClient>,
 ) {
-	let new_wasm: &[u8] = include_bytes!("minimal_template_runtime.compact.compressed.wasm");
+	let new_wasm: &[u8] = include_bytes!("async/examples/original/minimal_template_runtime.compact.compressed.wasm");
 
 	// this call can only be called by sudo
 	let call = compose_call!(api.metadata(), "System", "set_code", new_wasm.to_vec()).unwrap();
