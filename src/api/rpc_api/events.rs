@@ -312,9 +312,10 @@ mod tests {
 		assert_eq!(associated_events[1].index(), associated_event_details3.index());
 	}
 
+	#[tokio::test]
 	#[test_case(SupportedMetadataVersions::V14)]
 	#[test_case(SupportedMetadataVersions::V15)]
-	fn fetch_events_from_block_works(metadata_version: SupportedMetadataVersions) {
+	async fn fetch_events_from_block_works(metadata_version: SupportedMetadataVersions) {
 		let metadata = metadata_with_version::<Event>(metadata_version);
 
 		let extrinsic_index = 1;
@@ -346,13 +347,13 @@ mod tests {
 
 		let api = create_mock_api(metadata, data);
 
-		let fetched_events = api.fetch_events_from_block(H256::random()).unwrap();
+		let fetched_events = api.fetch_events_from_block(H256::random()).await.unwrap();
 
 		assert_eq!(fetched_events.event_bytes(), block_events.event_bytes());
 	}
 
-	#[test]
-	fn retrieve_extrinsic_index_from_block_works() {
+	#[tokio::test]
+	async fn retrieve_extrinsic_index_from_block_works() {
 		// We need a pallet balance in the metadata, so ` api.balance_transfer` can create the extrinsic.
 		let encoded_metadata = fs::read("./ksm_metadata_v14.bin").unwrap();
 		let metadata: RuntimeMetadataPrefixed =
@@ -397,9 +398,9 @@ mod tests {
 		let block_hash = H256::default();
 
 		let (index1, index2, index3) = (
-			api.retrieve_extrinsic_index_from_block(block_hash, xt_hash1).unwrap(),
-			api.retrieve_extrinsic_index_from_block(block_hash, xt_hash2).unwrap(),
-			api.retrieve_extrinsic_index_from_block(block_hash, xt_hash3).unwrap(),
+			api.retrieve_extrinsic_index_from_block(block_hash, xt_hash1).await.unwrap(),
+			api.retrieve_extrinsic_index_from_block(block_hash, xt_hash2).await.unwrap(),
+			api.retrieve_extrinsic_index_from_block(block_hash, xt_hash3).await.unwrap(),
 		);
 
 		assert_eq!(index1, 0);

@@ -75,8 +75,10 @@ ws = { version = "0.9", optional = true, features = ["ssl"] }
 
 [dev-dependencies]
 ac-node-api = { path = "node-api", version = "1.17", features = ["mocks"] }
+resonance-runtime = { workspace = true, default-features = false, features = ["std"] }
 scale-info = { version = "2.1", features = ["derive"] }
 test-case = "3.1"
+tokio = { version = "1.24", features = ["rt-multi-thread", "macros"] }
 
 [features]
 default = ["std", "jsonrpsee-client"]
