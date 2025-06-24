@@ -13,8 +13,7 @@ use crate::{
 };
 use codec::{Decode, Encode};
 use core::fmt::Debug;
-use dilithium_crypto::types::ResonanceSignatureScheme;
-use dilithium_crypto::types::ResonancePair;
+use dilithium_crypto::types::{ResonancePair, ResonanceSignatureScheme};
 use poseidon_resonance::PoseidonHasher;
 
 /// Standard runtime config for Substrate and Polkadot nodes.

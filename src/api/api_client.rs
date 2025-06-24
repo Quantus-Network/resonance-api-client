@@ -263,6 +263,7 @@ where
 		Metadata::try_from(metadata).map_err(|e| e.into())
 	}
 }
+
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -285,8 +286,8 @@ mod tests {
 		Api::new_offline(genesis_hash, metadata, runtime_version, client)
 	}
 
-	#[test]
-	fn api_extrinsic_params_works() {
+	#[maybe_async::test(feature = "sync-api", async(feature = "jsonrpsee-client", tokio::test))]
+	async fn api_extrinsic_params_works() {
 		// Create new api.
 		let genesis_hash = H256::random();
 		let runtime_version = RuntimeVersion::default();
@@ -316,8 +317,8 @@ mod tests {
 		assert_eq!(expected_params, retrieved_params)
 	}
 
-	#[test]
-	fn api_runtime_update_works() {
+	#[maybe_async::test(feature = "sync-api", async(feature = "jsonrpsee-client", tokio::test))]
+	async fn api_runtime_update_works() {
 		let runtime_version = RuntimeVersion { spec_version: 10, ..Default::default() };
 		// Update metadata
 		let encoded_metadata: Bytes = fs::read("./ksm_metadata_v14.bin").unwrap().into();
@@ -358,7 +359,7 @@ mod tests {
 		assert_ne!(api.runtime_version, runtime_version);
 
 		// Update runtime.
-		api.update_runtime().unwrap();
+		api.update_runtime().await.unwrap();
 
 		// Ensure metadata and runtime version have been updated.
 		assert_eq!(api.metadata.extrinsic(), metadata.extrinsic());

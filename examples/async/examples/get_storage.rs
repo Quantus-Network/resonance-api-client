@@ -100,7 +100,7 @@ async fn main() {
 	}
 
 	// Create a recovery, so we can fetch an actual ActiveRecovery state from the chain.
-	// NOTE: Disabled because we don't have recovery pallet. We should have it though. 
+	// NOTE: Disabled because we don't have recovery pallet. We should have it though.
 
 	// let alice = Sr25519Keyring::Alice.to_account_id();
 	// let alice_multiaddress: Address = alice.clone().into();
