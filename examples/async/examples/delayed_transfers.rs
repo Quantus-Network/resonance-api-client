@@ -15,15 +15,14 @@
 use codec::Decode;
 use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
 use pallet_reversible_transfers::DelayPolicy;
-use resonance_runtime::{Address, BlockNumber};
+use quantus_runtime::{Address, BlockNumber};
 use sp_core::H256;
 use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_compose_macros::compose_extrinsic,
 	ac_node_api::RawEventDetails,
 	ac_primitives::{
-		resonance_runtime_config::ResonanceRuntimeConfig, Config, ExtrinsicSigner,
-		UncheckedExtrinsic,
+		quantus_runtime_config::QuantusRuntimeConfig, Config, ExtrinsicSigner, UncheckedExtrinsic,
 	},
 	extrinsic::BalancesExtrinsics,
 	rpc::JsonrpseeClient,
@@ -33,11 +32,11 @@ use substrate_api_client::{
 
 pub type Result<T> = core::result::Result<T, Error>;
 
-type Hash = <ResonanceRuntimeConfig as Config>::Hash;
+type Hash = <QuantusRuntimeConfig as Config>::Hash;
 
 mod verify_proof;
 
-type AccountId = <ResonanceRuntimeConfig as Config>::AccountId;
+type AccountId = <QuantusRuntimeConfig as Config>::AccountId;
 
 #[tokio::main]
 async fn main() {
@@ -52,9 +51,9 @@ async fn main() {
 	let bob = dilithium_bob().into_account();
 
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
-	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
+	let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await.unwrap();
 
-	let es = ExtrinsicSigner::<ResonanceRuntimeConfig>::new(alice_signer.into());
+	let es = ExtrinsicSigner::<QuantusRuntimeConfig>::new(alice_signer.into());
 
 	api.set_signer(es);
 

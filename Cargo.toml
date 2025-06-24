@@ -35,7 +35,7 @@ members = [
 #poseidon-resonance = { path = "../poseidon-resonance", default-features = false, features = ["serde"] }
 
 dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false }
-resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false }
+quantus-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false }
 # pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
 poseidon-resonance = { git = "https://github.com/Quantus-Network/poseidon-resonance", default-features = false, features = ["serde"] }
 pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false }

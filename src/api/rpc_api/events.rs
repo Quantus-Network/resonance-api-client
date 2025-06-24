@@ -244,7 +244,7 @@ mod tests {
 	use ac_primitives::{FrameSystemConfig, RococoRuntimeConfig};
 	use frame_metadata::{RuntimeMetadataPrefixed, StorageEntryModifier};
 	// todo: fix tests
-	// use resonance_runtime::{BalancesCall, RuntimeCall, UncheckedExtrinsic};
+	// use quantus_runtime::{BalancesCall, RuntimeCall, UncheckedExtrinsic};
 	use sp_core::{
 		crypto::{Pair, Ss58Codec},
 		sr25519, H256,

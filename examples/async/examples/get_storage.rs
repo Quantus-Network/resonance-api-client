@@ -19,7 +19,7 @@ use dilithium_crypto::{crystal_alice, dilithium_bob};
 use frame_system::AccountInfo as GenericAccountInfo;
 use sp_keyring::Sr25519Keyring;
 use substrate_api_client::{
-	ac_primitives::{Config, ResonanceRuntimeConfig},
+	ac_primitives::{Config, QuantusRuntimeConfig},
 	rpc::JsonrpseeClient,
 	Api, GetAccountInformation, GetStorage,
 };
@@ -30,11 +30,11 @@ use sp_runtime::traits::IdentifyAccount;
 // own runtime if it uses different parameter configurations. Several pre-compiled runtimes are available in the ac-primitives crate.
 
 type AccountInfo = GenericAccountInfo<
-	<ResonanceRuntimeConfig as Config>::Index,
-	<ResonanceRuntimeConfig as Config>::AccountData,
+	<QuantusRuntimeConfig as Config>::Index,
+	<QuantusRuntimeConfig as Config>::AccountData,
 >;
 
-type Balance = <ResonanceRuntimeConfig as Config>::Balance;
+type Balance = <QuantusRuntimeConfig as Config>::Balance;
 // type AccountId = <ResonanceRuntimeConfig as Config>::AccountId;
 // type BlockNumber = <ResonanceRuntimeConfig as Config>::BlockNumber;
 // type Friends = Vec<AccountId>;
@@ -46,7 +46,7 @@ async fn main() {
 
 	// Initialize the api.
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
-	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
+	let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await.unwrap();
 
 	// Get some plain storage values.
 	let (balance, proof) = tokio::try_join!(
