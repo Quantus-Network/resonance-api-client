@@ -17,7 +17,7 @@ use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_node_api::RawEventDetails,
 	ac_primitives::{
-		resonance_runtime_config::ResonanceRuntimeConfig, Config, ExtrinsicSigner,
+		quantus_runtime_config::QuantusRuntimeConfig, Config, ExtrinsicSigner,
 		UncheckedExtrinsic,
 	},
 	extrinsic::BalancesExtrinsics,
@@ -26,7 +26,7 @@ use substrate_api_client::{
 	XtStatus,
 };
 
-type Hash = <ResonanceRuntimeConfig as Config>::Hash;
+type Hash = <QuantusRuntimeConfig as Config>::Hash;
 
 mod verify_proof;
 
@@ -46,9 +46,9 @@ async fn main() {
 	// let bob = AccountId32::from_string("5FktBKPnRkY5QvF2NmFNUNh55mJvBtgMth5QoBjFJ4E4BbFf").unwrap();
 
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
-	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
+	let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await.unwrap();
 
-	let es = ExtrinsicSigner::<ResonanceRuntimeConfig>::new(alice_signer);
+	let es = ExtrinsicSigner::<QuantusRuntimeConfig>::new(alice_signer);
 
 	api.set_signer(es);
 

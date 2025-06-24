@@ -4,7 +4,7 @@ use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
 use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_primitives::{
-		resonance_runtime_config::ResonanceRuntimeConfig, Config,
+		quantus_runtime_config::QuantusRuntimeConfig, Config,
 		ExtrinsicSigner as GenericExtrinsicSigner,
 	},
 	extrinsic::BalancesExtrinsics,
@@ -13,10 +13,10 @@ use substrate_api_client::{
 };
 
 // Define an extrinsic signer type.
-type ExtrinsicSigner = GenericExtrinsicSigner<ResonanceRuntimeConfig>;
+type ExtrinsicSigner = GenericExtrinsicSigner<QuantusRuntimeConfig>;
 
 // AccountId type of the runtime.
-type AccountId = <ResonanceRuntimeConfig as Config>::AccountId;
+type AccountId = <QuantusRuntimeConfig as Config>::AccountId;
 
 #[tokio::main]
 async fn main() {
@@ -25,7 +25,7 @@ async fn main() {
 	// Initialize api and set the signer.
 	let signer = crystal_alice();
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
-	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
+	let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await.unwrap();
 	api.set_signer(ExtrinsicSigner::new(signer));
 
 	// Define recipient and amount to transfer.

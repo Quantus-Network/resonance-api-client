@@ -7,7 +7,7 @@ use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_compose_macros::{compose_call, compose_extrinsic},
 	ac_primitives::{
-		resonance_runtime_config::ResonanceRuntimeConfig, Config,
+		quantus_runtime_config::QuantusRuntimeConfig, Config,
 		ExtrinsicSigner as GenericExtrinsicSigner, SignExtrinsic, UncheckedExtrinsic,
 	},
 	rpc::JsonrpseeClient,
@@ -15,15 +15,15 @@ use substrate_api_client::{
 };
 
 // Define an extrinsic signer type which sets the generic types of the `GenericExtrinsicSigner`.
-type ExtrinsicSigner = GenericExtrinsicSigner<ResonanceRuntimeConfig>;
+type ExtrinsicSigner = GenericExtrinsicSigner<QuantusRuntimeConfig>;
 
 // To access the ExtrinsicAddress type of the Signer, we need to do this via the trait `SignExtrinsic`.
 type ExtrinsicAddressOf<Signer> = <Signer as SignExtrinsic<AccountId>>::ExtrinsicAddress;
 
 // AccountId type of the runtime.
-type AccountId = <ResonanceRuntimeConfig as Config>::AccountId;
-type Address = <ResonanceRuntimeConfig as Config>::Address;
-type Balance = <ResonanceRuntimeConfig as Config>::Balance;
+type AccountId = <QuantusRuntimeConfig as Config>::AccountId;
+type Address = <QuantusRuntimeConfig as Config>::Address;
+type Balance = <QuantusRuntimeConfig as Config>::Balance;
 
 #[tokio::main]
 async fn main() {
@@ -33,7 +33,7 @@ async fn main() {
 	// The sudoer is set to `crystal_alice`.
 	let sudoer_signer = crystal_alice();
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
-	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
+	let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await.unwrap();
 	api.set_signer(ExtrinsicSigner::new(sudoer_signer));
 
 	// Set the recipient of newly issued funds.

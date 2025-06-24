@@ -4,7 +4,7 @@ use sp_core::{crypto::AccountId32, twox_128, Hasher, H256};
 use sp_state_machine::read_proof_check;
 use sp_trie::StorageProof;
 use substrate_api_client::{
-	ac_primitives::{DefaultRuntimeConfig, HashTrait, ResonanceRuntimeConfig, StorageKey},
+	ac_primitives::{DefaultRuntimeConfig, HashTrait, QuantusRuntimeConfig, StorageKey},
 	rpc::JsonrpseeClient,
 	runtime_api::AccountNonceApi,
 	Api, GetChainInfo, GetStorage,
@@ -46,7 +46,7 @@ pub fn check_leaf(leaf_hash: &[u8; 32], leaf_node: Vec<u8>) -> bool {
 }
 
 pub async fn verify_transfer_proof(
-	api: Api<ResonanceRuntimeConfig, JsonrpseeClient>,
+	api: Api<QuantusRuntimeConfig, JsonrpseeClient>,
 	from: AccountId32,
 	to: AccountId32,
 	amount: u128,

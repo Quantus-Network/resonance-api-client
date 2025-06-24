@@ -29,13 +29,13 @@ members = [
 
 ## Note: Use these local paths for testing the latest changes you made
 # dilithium-crypto = { path = "../backbone/dilithium-crypto", default-features = false, features = ["full_crypto"] }
-# resonance-runtime = { path = "../backbone/runtime", default-features = false }
+# QuantusRuntimeConfig = { path = "../backbone/runtime", default-features = false }
 # pallet-merkle-airdrop = { path = "../backbone/pallets/merkle-airdrop", default-features = false }
 #pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
 #poseidon-resonance = { path = "../poseidon-resonance", default-features = false, features = ["serde"] }
 
 dilithium-crypto = { git = "https://github.com/Quantus-Network/chain", default-features = false }
-resonance-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false }
+quantus-runtime = { git = "https://github.com/Quantus-Network/chain", default-features = false }
 # pallet-merkle-airdrop = { git = "https://gitlab.com/resonance-network/backbone.git", default-features = false }
 poseidon-resonance = { git = "https://github.com/Quantus-Network/poseidon-resonance", default-features = false, features = ["serde"] }
 pallet-reversible-transfers = { git = "https://github.com/Quantus-Network/chain", default-features = false }
@@ -75,7 +75,7 @@ ws = { version = "0.9", optional = true, features = ["ssl"] }
 
 [dev-dependencies]
 ac-node-api = { path = "node-api", version = "1.17", features = ["mocks"] }
-resonance-runtime = { workspace = true, default-features = false, features = ["std"] }
+quantus-runtime = { workspace = true, default-features = false, features = ["std"] }
 scale-info = { version = "2.1", features = ["derive"] }
 test-case = "3.1"
 tokio = { version = "1.24", features = ["rt-multi-thread", "macros"] }
