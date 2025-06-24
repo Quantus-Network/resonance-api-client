@@ -22,8 +22,7 @@ use substrate_api_client::{
 	ac_compose_macros::compose_extrinsic,
 	ac_node_api::RawEventDetails,
 	ac_primitives::{
-		quantus_runtime_config::QuantusRuntimeConfig, Config, ExtrinsicSigner,
-		UncheckedExtrinsic,
+		quantus_runtime_config::QuantusRuntimeConfig, Config, ExtrinsicSigner, UncheckedExtrinsic,
 	},
 	extrinsic::BalancesExtrinsics,
 	rpc::JsonrpseeClient,

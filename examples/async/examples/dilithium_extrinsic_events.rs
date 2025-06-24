@@ -17,8 +17,7 @@ use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_node_api::RawEventDetails,
 	ac_primitives::{
-		quantus_runtime_config::QuantusRuntimeConfig, Config, ExtrinsicSigner,
-		UncheckedExtrinsic,
+		quantus_runtime_config::QuantusRuntimeConfig, Config, ExtrinsicSigner, UncheckedExtrinsic,
 	},
 	extrinsic::BalancesExtrinsics,
 	rpc::JsonrpseeClient,
