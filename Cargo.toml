@@ -29,7 +29,7 @@ members = [
 
 ## Note: Use these local paths for testing the latest changes you made
 # dilithium-crypto = { path = "../backbone/dilithium-crypto", default-features = false, features = ["full_crypto"] }
-# QuantusRuntimeConfig = { path = "../backbone/runtime", default-features = false }
+# quantus-runtime = { path = "../backbone/runtime", default-features = false }
 # pallet-merkle-airdrop = { path = "../backbone/pallets/merkle-airdrop", default-features = false }
 #pallet-reversible-transfers = { path = "../backbone/pallets/reversible-transfers", default-features = false }
 #poseidon-resonance = { path = "../poseidon-resonance", default-features = false, features = ["serde"] }
