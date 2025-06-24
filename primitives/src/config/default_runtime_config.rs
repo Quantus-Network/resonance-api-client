@@ -39,4 +39,5 @@ impl Config for DefaultRuntimeConfig {
 
 /// A struct representing the signed extra and additional parameters required
 /// to construct a transaction and pay in token fees.
-pub type DefaultPlainTipExtrinsicParams<T> = GenericExtrinsicParams<T, PlainTip<<T as Config>::Balance>>;
+pub type DefaultPlainTipExtrinsicParams<T> =
+	GenericExtrinsicParams<T, PlainTip<<T as Config>::Balance>>;

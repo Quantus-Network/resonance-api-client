@@ -25,10 +25,12 @@ use crate::{extrinsic_params, ExtrinsicSigner, SignExtrinsic};
 pub use asset_runtime_config::*;
 pub use default_runtime_config::*;
 pub use resonance_runtime_config::*;
+pub use rococo_runtime_config::*;
 
 pub mod asset_runtime_config;
 pub mod default_runtime_config;
 pub mod resonance_runtime_config;
+pub mod rococo_runtime_config;
 
 /// Runtime types.
 pub trait Config {
@@ -81,7 +83,8 @@ pub trait Config {
 
 	/// The block header.
 	type Header: Debug
-		+ HeaderTrait<Number = Self::BlockNumber>//, Hashing = Self::Hasher>  <-- runtime does not require this
+		+ HeaderTrait<Number = Self::BlockNumber>
+		//, Hashing = Self::Hasher>  <-- runtime does not require this
 		+ Send
 		+ DeserializeOwned;
 
