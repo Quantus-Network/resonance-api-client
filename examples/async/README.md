@@ -10,5 +10,6 @@ Working tests:
 
 ```
 cargo run --example sudo
+cargo run --example tech_collective
 cargo run --example transfer
 ```

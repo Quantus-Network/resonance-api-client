@@ -43,6 +43,7 @@ dependencies = [
  "parity-scale-codec",
  "poseidon-resonance",
  "quantus-runtime",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "sp-core",
