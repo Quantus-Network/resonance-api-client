@@ -37,9 +37,6 @@ async fn main() {
 	api.set_signer(from.into());
 
 	// Generate a random member.
-	// `ResonancePair::generate()` panics because the underlying implementation may use rejection
-	// sampling, and the default `sp_core::Pair::generate()` doesn't handle that.
-	// We implement a loop to retry until a valid key is generated from a random seed.
 	let (new_member, _) = loop {
 		let mut seed = [0u8; 32];
 		rand::thread_rng().fill_bytes(&mut seed);
@@ -92,7 +89,8 @@ async fn main() {
 		api.metadata(),
 		"TechCollective",
 		"remove_member",
-		new_member_address.clone()
+		new_member_address.clone(),
+		0u16
 	)
 	.unwrap();
 	let xt = compose_extrinsic!(api, "Sudo", "sudo", remove_member_call).unwrap();
