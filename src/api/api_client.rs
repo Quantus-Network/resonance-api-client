@@ -316,8 +316,8 @@ mod tests {
 		assert_eq!(expected_params, retrieved_params)
 	}
 
-	#[test]
-	fn api_runtime_update_works() {
+	#[tokio::test]
+	async fn api_runtime_update_works() {
 		let runtime_version = RuntimeVersion { spec_version: 10, ..Default::default() };
 		// Update metadata
 		let encoded_metadata: Bytes = fs::read("./ksm_metadata_v14.bin").unwrap().into();
@@ -358,7 +358,7 @@ mod tests {
 		assert_ne!(api.runtime_version, runtime_version);
 
 		// Update runtime.
-		api.update_runtime().unwrap();
+		api.update_runtime().await.unwrap();
 
 		// Ensure metadata and runtime version have been updated.
 		assert_eq!(api.metadata.extrinsic(), metadata.extrinsic());

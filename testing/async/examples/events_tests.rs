@@ -17,11 +17,11 @@
 
 use codec::Decode;
 use frame_support::dispatch::DispatchInfo;
-use resonance_runtime::RuntimeEvent;
+use quantus_runtime::RuntimeEvent;
 use sp_keyring::Sr25519Keyring;
 use substrate_api_client::{
 	ac_node_api::{EventDetails, StaticEvent},
-	ac_primitives::{Config, ResonanceRuntimeConfig},
+	ac_primitives::{Config, QuantusRuntimeConfig},
 	extrinsic::BalancesExtrinsics,
 	rpc::JsonrpseeClient,
 	Api, FetchEvents, GetChainInfo, SubmitAndWatch, SubscribeEvents, XtStatus,

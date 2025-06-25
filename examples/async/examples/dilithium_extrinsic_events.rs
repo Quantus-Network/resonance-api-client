@@ -12,25 +12,20 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
+use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
+use sp_runtime::traits::IdentifyAccount;
 use substrate_api_client::{
 	ac_node_api::RawEventDetails,
 	ac_primitives::{
-		UncheckedExtrinsic, ExtrinsicSigner, Config, resonance_runtime_config::ResonanceRuntimeConfig
+		quantus_runtime_config::QuantusRuntimeConfig, Config, ExtrinsicSigner, UncheckedExtrinsic,
 	},
 	extrinsic::BalancesExtrinsics,
 	rpc::JsonrpseeClient,
-	Api,
-	GetAccountInformation,
-	GetChainInfo,
-	GetStorage,
-	SubmitAndWatch,
-	TransactionStatus,
-	XtStatus
+	Api, GetAccountInformation, GetChainInfo, GetStorage, SubmitAndWatch, TransactionStatus,
+	XtStatus,
 };
-use dilithium_crypto::pair::{crystal_alice, dilithium_bob};
-use sp_runtime::{traits::IdentifyAccount};
 
-type Hash = <ResonanceRuntimeConfig as Config>::Hash;
+type Hash = <QuantusRuntimeConfig as Config>::Hash;
 
 mod verify_proof;
 
@@ -50,9 +45,9 @@ async fn main() {
 	// let bob = AccountId32::from_string("5FktBKPnRkY5QvF2NmFNUNh55mJvBtgMth5QoBjFJ4E4BbFf").unwrap();
 
 	let client = JsonrpseeClient::with_default_url().await.unwrap();
-	let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await.unwrap();
+	let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await.unwrap();
 
-	let es = ExtrinsicSigner::<ResonanceRuntimeConfig>::new(alice_signer);
+	let es = ExtrinsicSigner::<QuantusRuntimeConfig>::new(alice_signer);
 
 	api.set_signer(es);
 

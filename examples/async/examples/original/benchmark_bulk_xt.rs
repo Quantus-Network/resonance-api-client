@@ -15,7 +15,7 @@
 
 //! This example floods the node with a series of transactions.
 
-use resonance_runtime::{BalancesCall, RuntimeCall};
+use quantus_runtime::{BalancesCall, RuntimeCall};
 use sp_keyring::Sr25519Keyring;
 use substrate_api_client::{
 	ac_primitives::{

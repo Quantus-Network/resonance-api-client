@@ -13,15 +13,14 @@ use crate::{
 };
 use codec::{Decode, Encode};
 use core::fmt::Debug;
-use dilithium_crypto::types::ResonanceSignatureScheme;
-use dilithium_crypto::types::ResonancePair;
+use dilithium_crypto::types::{ResonancePair, ResonanceSignatureScheme};
 use poseidon_resonance::PoseidonHasher;
 
 /// Standard runtime config for Substrate and Polkadot nodes.
 #[derive(Decode, Encode, Clone, Eq, PartialEq, Debug)]
-pub struct ResonanceRuntimeConfig {}
+pub struct QuantusRuntimeConfig {}
 
-impl Config for ResonanceRuntimeConfig {
+impl Config for QuantusRuntimeConfig {
 	type Index = u32;
 	type BlockNumber = u32;
 	type Hash = H256;

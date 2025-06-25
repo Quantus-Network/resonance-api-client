@@ -28,7 +28,7 @@ use sp_core::{crypto::Ss58Codec, sr25519, H256};
 use sp_io::hashing::blake2_256;
 use std::fmt;
 use substrate_api_client::{
-	ac_compose_macros::compose_extrinsic, ac_primitives::ResonanceRuntimeConfig,
+	ac_compose_macros::compose_extrinsic, ac_primitives::QuantusRuntimeConfig,
 	rpc::JsonrpseeClient, Api, SubmitAndWatch, XtStatus,
 };
 
@@ -278,7 +278,7 @@ async fn main() -> Result<(), CliError> {
 		Command::CreateAirdrop { merkle_root } => {
 			info!("Connecting to node at {}", args.node_url);
 			let client = JsonrpseeClient::new(&args.node_url).await?;
-			let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
+			let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await?;
 
 			// Remove 0x prefix if present
 			let merkle_root = merkle_root.trim_start_matches("0x");
@@ -316,7 +316,7 @@ async fn main() -> Result<(), CliError> {
 		Command::FundAirdrop { id, amount } => {
 			info!("Connecting to node at {}", args.node_url);
 			let client = JsonrpseeClient::new(&args.node_url).await?;
-			let mut api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
+			let mut api = Api::<QuantusRuntimeConfig, _>::new(client).await?;
 
 			info!("Funding airdrop {} with amount {}", id, amount);
 
@@ -341,7 +341,7 @@ async fn main() -> Result<(), CliError> {
 		Command::Claim { id, amount, proofs, recipient } => {
 			info!("Connecting to node");
 			let client = JsonrpseeClient::new(&args.node_url).await?;
-			let api = Api::<ResonanceRuntimeConfig, _>::new(client).await?;
+			let api = Api::<QuantusRuntimeConfig, _>::new(client).await?;
 
 			info!("Claiming from airdrop {} for amount {} to recipient {}", id, amount, recipient);
 
