@@ -66,11 +66,11 @@ pub async fn verify_transfer_proof(
 		.unwrap()
 		.unwrap_or(0u64);
 	let key_tuple = (transfer_count, from.clone(), to.clone(), amount);
-	println!("[+] Transfer count: {transfer_count:?} key: {key_tuple:?}");
+	log::info!("[+] Transfer count: {transfer_count:?} key: {key_tuple:?}");
 	let leaf_hash =
 		compute_transfer_proof_leaf(transfer_count - 1, &from.clone(), &to.clone(), amount);
-	println!(
-		"[+] Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}",
+	log::info!(
+		"🍀 Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}",
 		hex::encode(leaf_hash),
 		from.encode(),
 		to.encode(),
@@ -96,7 +96,8 @@ pub async fn verify_transfer_proof(
 		.collect::<Vec<_>>(); // Collect into Vec<Vec<u8>>
 
 	let leaf_checked = check_leaf(&leaf_hash, proof_as_u8[proof_as_u8.len() - 1].clone());
-	println!("[+] Leaf check: {leaf_checked}");
+	let check_string = if leaf_checked { "✅" } else { "⚔️" };
+	log::info!("🍀 Leaf check: {check_string}");
 
 	for (i, node_data) in proof_as_u8.iter().enumerate() {
 		let node_hash = <PoseidonHasher as Hasher>::hash(node_data);
@@ -290,12 +291,14 @@ fn prepare_proof_for_circuit(
 
 	log::info!("Finished constructing bytes and hashes vectors {:?} {:?}", bytes, hashes);
 	let mut ordered_hashes = Vec::<String>::new();
+	let mut indices = Vec::<usize>::new();
 	while !hashes.is_empty() {
 		for i in (0..hashes.len()).rev() {
 			let hash = hashes[i].clone();
 			if let Some(last) = storage_proof.last() {
 				if let Some(index) = last.find(&hash) {
 					let (left, right) = last.split_at(index);
+					indices.push(index);
 					parts.push((left.to_string(), right.to_string()));
 					storage_proof.push(bytes[i].clone());
 					ordered_hashes.push(hash.clone());
@@ -306,7 +309,13 @@ fn prepare_proof_for_circuit(
 		}
 	}
 
-	log::info!("Storage proof generated: {:?} {:?} {:?}", &storage_proof, parts, ordered_hashes);
+	log::info!(
+		"Storage proof generated: {:?} {:?} {:?} {:?}",
+		&storage_proof,
+		parts,
+		ordered_hashes,
+		indices
+	);
 
 	for (i, _) in storage_proof.iter().enumerate() {
 		if i == parts.len() {
@@ -318,7 +327,7 @@ fn prepare_proof_for_circuit(
 		if part.1[..64] != hash {
 			log::error!("storage proof index incorrect {:?} != {:?}", part.1, hash);
 		} else {
-			log::warn!("storage proof index correct")
+			log::info!("storage proof index correct: {:?}", part.0.len());
 		}
 	}
 
