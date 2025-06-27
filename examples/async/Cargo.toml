@@ -29,8 +29,9 @@ quantus-runtime = { workspace = true, default-features = false, features = ["std
 # pallet-merkle-airdrop = { workspace = true, default-features = false, features=["std"] }
 poseidon-resonance = { workspace = true, default-features = false }
 trie-db = { version = "0.29.1", default-features = false }
-sp-trie = { version = "38.0.0", default-features = false }
-sp-state-machine = { version = "0.44.0", default-features = false }
+sp-trie = { git = "https://github.com/Quantus-Network/zk-trie" }
+sp-state-machine = { git = "https://github.com/Quantus-Network/zk-state-machine" }
+
 hex = { version = "0.4.3", default-features = false }
 # local deps
 substrate-api-client = { path = "../..", version = "1.17", features = ["staking-xt", "contracts-xt", "jsonrpsee-client"] }

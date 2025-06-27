@@ -16,13 +16,13 @@ use trie_db::{
 
 /// Function to compute the leaf hash for the TransferProof storage map key.
 /// Parameters:
-/// - tx_count: The nonce of the transaction.
+/// - tx_count: The global transfer count
 /// - from: The sender's AccountId.
 /// - to: The recipient's AccountId.
 /// - amount: The balance amount transferred.
 /// Returns: The hashed leaf as a `T::Hash`.
 pub fn compute_transfer_proof_leaf(
-	tx_count: u32,
+	tx_count: u64,
 	from: &AccountId32,
 	to: &AccountId32,
 	amount: u128,
@@ -37,10 +37,16 @@ pub fn compute_transfer_proof_leaf(
 	PoseidonHasher::hash_storage::<AccountId32>(&key_bytes)
 }
 
-// Function to check that the 24 byte suffix of the leaf hash is the last [-26, -2] bytes of the leaf node
+// Function to check that the 24 byte suffix of the leaf hash is the last [-32, -8] bytes of the leaf node
 pub fn check_leaf(leaf_hash: &[u8; 32], leaf_node: Vec<u8>) -> bool {
 	let hash_suffix = &leaf_hash[8..32];
-	let node_suffix = &leaf_node[leaf_node.len() - 26..leaf_node.len() - 2];
+	let node_suffix = &leaf_node[leaf_node.len() - 32..leaf_node.len() - 8];
+	log::debug!(
+		"Checking leaf hash suffix: {:?} against node suffix: {:?}",
+		hex::encode(hash_suffix),
+		hex::encode(node_suffix)
+	);
+	log::debug!("leaf_node: {:?}", hex::encode(leaf_node.clone()));
 
 	hash_suffix == node_suffix
 }
@@ -54,14 +60,18 @@ pub async fn verify_transfer_proof(
 	let block_hash = api.get_block_hash(None).await.unwrap().unwrap();
 	// This gives the chain time to fully process the new block, not sure if it's 100% necessary now
 	tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
-
-	let nonce = api.runtime_api().account_nonce(from.clone(), None).await.unwrap();
-	let key_tuple = (nonce, from.clone(), to.clone(), amount);
-	println!("[+] Transaction nonce: {nonce:?} key: {key_tuple:?}");
-	let leaf_hash = compute_transfer_proof_leaf(nonce, &from.clone(), &to.clone(), amount);
-	println!(
-		"[+] Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}",
-		leaf_hash,
+	let transfer_count: u64 = api
+		.get_storage("Balances", "TransferCount", None)
+		.await
+		.unwrap()
+		.unwrap_or(0u64);
+	let key_tuple = (transfer_count, from.clone(), to.clone(), amount);
+	log::info!("[+] Transfer count: {transfer_count:?} key: {key_tuple:?}");
+	let leaf_hash =
+		compute_transfer_proof_leaf(transfer_count - 1, &from.clone(), &to.clone(), amount);
+	log::info!(
+		"🍀 Leaf hash: {:?} From: {:?} To: {:?} Amount: {:?}",
+		hex::encode(leaf_hash),
 		from.encode(),
 		to.encode(),
 		amount.encode()
@@ -85,8 +95,9 @@ pub async fn verify_transfer_proof(
 		.map(|bytes| bytes.as_ref().to_vec()) // Convert each Bytes to Vec<u8>
 		.collect::<Vec<_>>(); // Collect into Vec<Vec<u8>>
 
-	let leaf_checked = check_leaf(&leaf_hash, proof_as_u8[0].clone());
-	println!("[+] Leaf check: {leaf_checked}");
+	let leaf_checked = check_leaf(&leaf_hash, proof_as_u8[proof_as_u8.len() - 1].clone());
+	let check_string = if leaf_checked { "✅" } else { "⚔️" };
+	log::info!("🍀 Leaf check: {check_string}");
 
 	for (i, node_data) in proof_as_u8.iter().enumerate() {
 		let node_hash = <PoseidonHasher as Hasher>::hash(node_data);
@@ -156,11 +167,11 @@ pub async fn verify_transfer_proof(
 	prepare_proof_for_circuit(proof_as_u8.clone(), hex::encode(state_root));
 
 	println!("Header: {:?} State root: {:?}", header, state_root);
-	let expected_value = true.encode();
+	let expected_value = ().encode();
 	println!("Expected value: {:?}", expected_value);
 
 	let storage_value = api
-		.get_storage_by_key::<bool>(storage_key.clone(), Some(block_hash))
+		.get_storage_by_key::<()>(storage_key.clone(), Some(block_hash))
 		.await
 		.unwrap();
 	println!("Storage value: {:?}", storage_value);
@@ -280,12 +291,14 @@ fn prepare_proof_for_circuit(
 
 	log::info!("Finished constructing bytes and hashes vectors {:?} {:?}", bytes, hashes);
 	let mut ordered_hashes = Vec::<String>::new();
+	let mut indices = Vec::<usize>::new();
 	while !hashes.is_empty() {
 		for i in (0..hashes.len()).rev() {
 			let hash = hashes[i].clone();
 			if let Some(last) = storage_proof.last() {
 				if let Some(index) = last.find(&hash) {
 					let (left, right) = last.split_at(index);
+					indices.push(index);
 					parts.push((left.to_string(), right.to_string()));
 					storage_proof.push(bytes[i].clone());
 					ordered_hashes.push(hash.clone());
@@ -296,7 +309,13 @@ fn prepare_proof_for_circuit(
 		}
 	}
 
-	log::info!("Storage proof generated: {:?} {:?} {:?}", &storage_proof, parts, ordered_hashes);
+	log::info!(
+		"Storage proof generated: {:?} {:?} {:?} {:?}",
+		&storage_proof,
+		parts,
+		ordered_hashes,
+		indices
+	);
 
 	for (i, _) in storage_proof.iter().enumerate() {
 		if i == parts.len() {
@@ -308,7 +327,7 @@ fn prepare_proof_for_circuit(
 		if part.1[..64] != hash {
 			log::error!("storage proof index incorrect {:?} != {:?}", part.1, hash);
 		} else {
-			log::warn!("storage proof index correct")
+			log::info!("storage proof index correct: {:?}", part.0.len());
 		}
 	}
 
