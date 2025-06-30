@@ -50,8 +50,8 @@ dependencies = [
  "sp-io",
  "sp-keyring",
  "sp-runtime",
- "sp-state-machine",
- "sp-trie",
+ "sp-state-machine 0.44.0 (git+https://github.com/Quantus-Network/zk-state-machine)",
+ "sp-trie 38.0.0 (git+https://github.com/Quantus-Network/zk-trie)",
  "sp-weights",
  "substrate-api-client",
  "tokio",
@@ -1466,7 +1466,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cea14ef9355e3beab063703aa9dab15afd25f0667c341310c1e5274bb1d0da18"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -1734,10 +1734,10 @@ dependencies = [
  "sp-metadata-ir",
  "sp-runtime",
  "sp-staking",
- "sp-state-machine",
+ "sp-state-machine 0.44.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp-std",
  "sp-tracing",
- "sp-trie",
+ "sp-trie 38.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp-weights",
  "static_assertions",
  "tt-call",
@@ -3640,8 +3640,8 @@ dependencies = [
  "sp-runtime",
  "sp-session",
  "sp-staking",
- "sp-state-machine",
- "sp-trie",
+ "sp-state-machine 0.44.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-trie 38.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -3812,7 +3812,7 @@ dependencies = [
  "log",
  "pallet-balances 40.0.1",
  "parity-scale-codec",
- "plonky2 1.0.2 (git+https://github.com/Quantus-Network/plonky2)",
+ "plonky2",
  "scale-info",
  "sp-core",
  "sp-io",
@@ -3827,8 +3827,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4e69bf016dc406eff7d53a7d3f7cf1c2e72c82b9088aac1118591e36dd2cd3e9"
 dependencies = [
  "bitcoin_hashes",
- "rand 0.7.3",
- "rand_core 0.5.1",
+ "rand 0.8.5",
+ "rand_core 0.6.4",
  "serde",
  "unicode-normalization",
 ]
@@ -3984,30 +3984,9 @@ dependencies = [
  "keccak-hash",
  "log",
  "num",
- "plonky2_field 1.0.0 (git+https://github.com/Quantus-Network/plonky2)",
- "plonky2_maybe_rayon 1.0.0 (git+https://github.com/Quantus-Network/plonky2)",
- "plonky2_util 1.0.0 (git+https://github.com/Quantus-Network/plonky2)",
- "rand 0.8.5",
- "serde",
- "static_assertions",
- "unroll",
-]
-
-[[package]]
-name = "plonky2"
-version = "1.0.2"
-source = "git+https://github.com/Resonance-Network/plonky2#80a10007d8359b54843acb826097561859a6b621"
-dependencies = [
- "ahash",
- "anyhow",
- "hashbrown 0.14.5",
- "itertools 0.11.0",
- "keccak-hash",
- "log",
- "num",
- "plonky2_field 1.0.0 (git+https://github.com/Resonance-Network/plonky2)",
- "plonky2_maybe_rayon 1.0.0 (git+https://github.com/Resonance-Network/plonky2)",
- "plonky2_util 1.0.0 (git+https://github.com/Resonance-Network/plonky2)",
+ "plonky2_field",
+ "plonky2_maybe_rayon",
+ "plonky2_util",
  "rand 0.8.5",
  "serde",
  "static_assertions",
@@ -4022,21 +4001,7 @@ dependencies = [
  "anyhow",
  "itertools 0.11.0",
  "num",
- "plonky2_util 1.0.0 (git+https://github.com/Quantus-Network/plonky2)",
- "serde",
- "static_assertions",
- "unroll",
-]
-
-[[package]]
-name = "plonky2_field"
-version = "1.0.0"
-source = "git+https://github.com/Resonance-Network/plonky2#80a10007d8359b54843acb826097561859a6b621"
-dependencies = [
- "anyhow",
- "itertools 0.11.0",
- "num",
- "plonky2_util 1.0.0 (git+https://github.com/Resonance-Network/plonky2)",
+ "plonky2_util",
  "serde",
  "static_assertions",
  "unroll",
@@ -4048,19 +4013,9 @@ version = "1.0.0"
 source = "git+https://github.com/Quantus-Network/plonky2#80a10007d8359b54843acb826097561859a6b621"
 
 [[package]]
-name = "plonky2_maybe_rayon"
-version = "1.0.0"
-source = "git+https://github.com/Resonance-Network/plonky2#80a10007d8359b54843acb826097561859a6b621"
-
-[[package]]
 name = "plonky2_util"
 version = "1.0.0"
 source = "git+https://github.com/Quantus-Network/plonky2#80a10007d8359b54843acb826097561859a6b621"
-
-[[package]]
-name = "plonky2_util"
-version = "1.0.0"
-source = "git+https://github.com/Resonance-Network/plonky2#80a10007d8359b54843acb826097561859a6b621"
 
 [[package]]
 name = "polkadot-core-primitives"
@@ -4197,18 +4152,18 @@ dependencies = [
 
 [[package]]
 name = "poseidon-resonance"
-version = "0.6.0"
-source = "git+https://github.com/Quantus-Network/poseidon-resonance#e39fff549e4bef8f97b1b96e0857c47a6a7eb5ab"
+version = "0.8.0"
+source = "git+https://github.com/Quantus-Network/poseidon-resonance#fcb49a7ac9f761f3a1fe81308ccf598882f87c7a"
 dependencies = [
  "log",
  "parity-scale-codec",
- "plonky2 1.0.2 (git+https://github.com/Resonance-Network/plonky2)",
+ "plonky2",
  "scale-info",
  "serde",
  "sp-core",
  "sp-runtime",
  "sp-storage",
- "sp-trie",
+ "sp-trie 38.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -4719,7 +4674,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -4776,7 +4731,7 @@ dependencies = [
  "security-framework 3.2.0",
  "security-framework-sys",
  "webpki-root-certs 0.26.11",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -5345,8 +5300,8 @@ dependencies = [
  "sp-metadata-ir",
  "sp-runtime",
  "sp-runtime-interface",
- "sp-state-machine",
- "sp-trie",
+ "sp-state-machine 0.44.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sp-trie 38.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp-version",
  "thiserror 1.0.69",
 ]
@@ -5578,9 +5533,9 @@ dependencies = [
  "sp-externalities",
  "sp-keystore",
  "sp-runtime-interface",
- "sp-state-machine",
+ "sp-state-machine 0.44.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp-tracing",
- "sp-trie",
+ "sp-trie 38.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tracing",
  "tracing-core",
 ]
@@ -5688,7 +5643,7 @@ dependencies = [
  "sp-core",
  "sp-io",
  "sp-std",
- "sp-trie",
+ "sp-trie 38.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "sp-weights",
  "tracing",
  "tuplex",
@@ -5772,7 +5727,27 @@ dependencies = [
  "sp-core",
  "sp-externalities",
  "sp-panic-handler",
- "sp-trie",
+ "sp-trie 38.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "thiserror 1.0.69",
+ "tracing",
+ "trie-db",
+]
+
+[[package]]
+name = "sp-state-machine"
+version = "0.44.0"
+source = "git+https://github.com/Quantus-Network/zk-state-machine#06d1e9545428b57aa56e8997c7bf24eaeb48a103"
+dependencies = [
+ "hash-db",
+ "log",
+ "parity-scale-codec",
+ "parking_lot",
+ "rand 0.8.5",
+ "smallvec",
+ "sp-core",
+ "sp-externalities",
+ "sp-panic-handler",
+ "sp-trie 38.0.0 (git+https://github.com/Quantus-Network/zk-trie)",
  "thiserror 1.0.69",
  "tracing",
  "trie-db",
@@ -5840,6 +5815,29 @@ checksum = "1851c4929ae88932c6bcdb9e60f4063e478ca612012af3b6d365c7dc9c591f7f"
 dependencies = [
  "ahash",
  "hash-db",
+ "memory-db",
+ "nohash-hasher",
+ "parity-scale-codec",
+ "parking_lot",
+ "rand 0.8.5",
+ "scale-info",
+ "schnellru",
+ "sp-core",
+ "sp-externalities",
+ "thiserror 1.0.69",
+ "tracing",
+ "trie-db",
+ "trie-root",
+]
+
+[[package]]
+name = "sp-trie"
+version = "38.0.0"
+source = "git+https://github.com/Quantus-Network/zk-trie#bb1c142115ef1c7cae9378dd438b179d113d29cb"
+dependencies = [
+ "ahash",
+ "hash-db",
+ "log",
  "memory-db",
  "nohash-hasher",
  "parity-scale-codec",
@@ -6207,7 +6205,7 @@ dependencies = [
  "getrandom 0.3.3",
  "once_cell",
  "rustix",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -6619,9 +6617,9 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97fee6b57c6a41524a810daee9286c02d7752c4253064d0b05472833a438f675"
 dependencies = [
- "cfg-if 0.1.10",
+ "cfg-if 1.0.0",
  "digest 0.10.7",
- "rand 0.7.3",
+ "rand 0.8.5",
  "static_assertions",
 ]
 
@@ -6973,7 +6971,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
